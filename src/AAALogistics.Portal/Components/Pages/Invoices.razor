@@ -1,0 +1,116 @@
+@page "/facturas"
+@rendermode InteractiveServer
+@using System.Globalization
+@using AAALogistics.Contracts
+@using AAALogistics.Portal.Services
+@inject PortalApiClient Api
+@inject PortalSession Session
+@inject IJSRuntime Js
+
+<PageTitle>Mis facturas</PageTitle>
+
+<h1>Mis facturas</h1>
+<p>Documentos fiscales emitidos a su empresa (consulta).</p>
+
+@if (!string.IsNullOrEmpty(_error))
+{
+    <p class="form-error">@_error</p>
+}
+else if (_invoices is null)
+{
+    <p>Cargando…</p>
+}
+else if (_invoices.Count == 0)
+{
+    <p>No hay facturas disponibles.</p>
+}
+else
+{
+    <table class="data">
+        <thead>
+            <tr>
+                <th>Número</th>
+                <th>Tipo</th>
+                <th>Estado</th>
+                <th>Total</th>
+                <th>Fecha</th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var invoice in _invoices)
+            {
+                <tr>
+                    <td>@invoice.DocumentNumber</td>
+                    <td>@invoice.Kind</td>
+                    <td>@invoice.Status</td>
+                    <td>@invoice.TotalAmount.ToString("N2", Culture) EUR</td>
+                    <td>@invoice.IssueDate.ToString("dd/MM/yyyy", Culture)</td>
+                    <td>
+                        <button type="button" class="linkish" @onclick="() => DownloadPdfAsync(invoice.Id)">
+                            PDF
+                        </button>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+
+@code {
+    private static readonly CultureInfo Culture = CultureInfo.GetCultureInfo("es-ES");
+
+    private IReadOnlyList<InvoiceResponse>? _invoices;
+    private string? _error;
+
+    protected override async Task OnInitializedAsync()
+    {
+        try
+        {
+            if (!Session.IsAuthenticated || Session.AccessToken is null)
+            {
+                _error = "Inicie sesión para ver sus facturas.";
+                _invoices = [];
+                return;
+            }
+
+            _invoices = await Api.GetInvoicesAsync(Session.AccessToken);
+        }
+        catch (Exception exception) when (exception is PortalApiException
+            or HttpRequestException
+            or TaskCanceledException)
+        {
+            _error = exception.Message;
+        }
+    }
+
+    private async Task DownloadPdfAsync(Guid invoiceId)
+    {
+        try
+        {
+            if (Session.AccessToken is null)
+            {
+                _error = "Sesión caducada.";
+                return;
+            }
+
+            var bytes = await Api.DownloadInvoicePdfAsync(Session.AccessToken, invoiceId);
+            var base64 = Convert.ToBase64String(bytes);
+            await Js.InvokeVoidAsync(
+                "eval",
+                $@"(function(){{
+                    const a=document.createElement('a');
+                    a.href='data:application/pdf;base64,{base64}';
+                    a.download='factura-{invoiceId:N}.pdf';
+                    a.click();
+                }})()");
+        }
+        catch (Exception exception) when (exception is PortalApiException
+            or HttpRequestException
+            or TaskCanceledException
+            or JSException)
+        {
+            _error = exception.Message;
+        }
+    }
+}

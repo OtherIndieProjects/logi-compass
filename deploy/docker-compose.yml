@@ -1,0 +1,25 @@
+# PostgreSQL local para desarrollo. Ver deploy/README.md.
+services:
+  postgres:
+    image: postgres:17-alpine
+    container_name: aaa-logistics-postgres
+    environment:
+      # Solo bootstrap/init. La aplicación debe conectar como aaa_app.
+      POSTGRES_USER: aaa_bootstrap
+      POSTGRES_PASSWORD: ${POSTGRES_BOOTSTRAP_PASSWORD:?defina POSTGRES_BOOTSTRAP_PASSWORD en .env}
+      POSTGRES_DB: aaalogistics
+      AAA_APP_PASSWORD: ${AAA_APP_PASSWORD:?defina AAA_APP_PASSWORD en .env}
+    # Solo loopback; no publicar en 0.0.0.0.
+    ports:
+      - "127.0.0.1:5432:5432"
+    volumes:
+      - aaa_pgdata:/var/lib/postgresql/data
+      - ./init-db.sh:/docker-entrypoint-initdb.d/01-init-roles.sh:ro
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U aaa_bootstrap -d aaalogistics"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+volumes:
+  aaa_pgdata:

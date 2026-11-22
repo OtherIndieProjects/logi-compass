@@ -1,0 +1,119 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             x:Class="AAALogistics.Client.Views.LabView">
+    <ScrollViewer>
+        <StackPanel Spacing="12" Margin="0,0,0,8">
+            <StackPanel x:Name="TitleRow" Orientation="Horizontal" Spacing="8">
+                <TextBlock Classes="page-title" Text="Lab (avanzado)" VerticalAlignment="Center" />
+            </StackPanel>
+            <TextBlock x:Name="StatusText" Classes="error" TextWrapping="Wrap" />
+            <TextBlock x:Name="EmptyHintText" Classes="muted" TextWrapping="Wrap"
+                       Text="Sin datos en las secciones cargadas. Cree una ola, factor UoM, tarifa o ruta, o pulse Actualizar." />
+
+            <Border Classes="panel">
+                <StackPanel Spacing="6">
+                    <StackPanel Orientation="Horizontal" Spacing="8">
+                        <TextBlock FontWeight="SemiBold" Text="Olas de preparación" VerticalAlignment="Center" />
+                        <ContentControl x:Name="WaveHelpHost" VerticalAlignment="Center" />
+                    </StackPanel>
+                    <StackPanel Orientation="Horizontal" Spacing="6">
+                        <ComboBox x:Name="WaveOrderBox" Width="260" PlaceholderText="Pedido de venta" />
+                        <Button Content="Añadir a la ola" Click="OnAddWaveOrderClick" />
+                        <Button Content="Vaciar lista" Click="OnClearWaveOrdersClick" />
+                        <TextBox x:Name="WavePriorityBox" Width="60" Text="1" PlaceholderText="Prioridad" />
+                        <Button Content="Crear ola" Click="OnCreateWaveClick" />
+                        <Button Content="Liberar seleccionada" Click="OnReleaseWaveClick" />
+                        <Button Content="Actualizar" Click="OnRefreshWavesClick" />
+                    </StackPanel>
+                    <TextBlock x:Name="WaveSelectedText" Classes="muted" Text="Ningún pedido en la ola todavía." TextWrapping="Wrap" />
+                    <TextBlock x:Name="WavesEmptyText" Classes="muted" Text="Sin olas. Elija pedidos de venta (número) y pulse Crear ola." IsVisible="False" />
+                    <DataGrid x:Name="WavesGrid" Height="140" AutoGenerateColumns="True" />
+                </StackPanel>
+            </Border>
+
+            <Border Classes="panel">
+                <StackPanel Spacing="6">
+                    <TextBlock FontWeight="SemiBold" Text="Conversión de unidades" />
+                    <StackPanel Orientation="Horizontal" Spacing="6">
+                        <ComboBox x:Name="FromUnitBox" Width="180" PlaceholderText="Desde" />
+                        <ComboBox x:Name="ToUnitBox" Width="180" PlaceholderText="Hasta" />
+                        <TextBox x:Name="UomFactorBox" Width="80" Text="12" PlaceholderText="Factor" />
+                        <Button Content="Guardar factor" Click="OnUpsertUomClick" />
+                        <TextBox x:Name="UomQtyBox" Width="80" Text="1" PlaceholderText="Cant." />
+                        <Button Content="Convertir" Click="OnConvertUomClick" />
+                    </StackPanel>
+                    <TextBlock x:Name="UomResultText" Classes="muted" />
+                    <TextBlock x:Name="UomEmptyText" Classes="muted" Text="Sin conversiones. Guarde un factor entre dos unidades." IsVisible="False" />
+                    <DataGrid x:Name="UomGrid" Height="120" AutoGenerateColumns="True" />
+                </StackPanel>
+            </Border>
+
+            <Border Classes="panel">
+                <StackPanel Spacing="6">
+                    <TextBlock FontWeight="SemiBold" Text="MRP ligero (sugerencias)" />
+                    <StackPanel Orientation="Horizontal" Spacing="6">
+                        <Button Content="Generar sugerencias" Click="OnGenerateMrpClick" />
+                        <Button Content="Actualizar" Click="OnRefreshMrpClick" />
+                    </StackPanel>
+                    <TextBlock x:Name="MrpEmptyText" Classes="muted" Text="Sin solicitudes MRP. Genere sugerencias o actualice." IsVisible="False" />
+                    <DataGrid x:Name="MrpGrid" Height="140" AutoGenerateColumns="True" />
+                </StackPanel>
+            </Border>
+
+            <Border Classes="panel">
+                <StackPanel Spacing="6">
+                    <TextBlock FontWeight="SemiBold" Text="Tarifa 3PL (recogida)" />
+                    <StackPanel Orientation="Horizontal" Spacing="6">
+                        <TextBox x:Name="RateCodeBox" Width="100" PlaceholderText="Código" Text="STD" />
+                        <TextBox x:Name="RateNameBox" Width="140" PlaceholderText="Nombre" Text="Estándar" />
+                        <TextBox x:Name="RatePickPriceBox" Width="80" Text="1.5" PlaceholderText="€ recogida" />
+                        <Button Content="Guardar" Click="OnUpsertRateClick" />
+                        <Button Content="Calcular recogida×10" Click="OnComputeRateClick" />
+                        <Button Content="Actualizar" Click="OnRefreshRateClick" />
+                    </StackPanel>
+                    <TextBlock x:Name="RateResultText" Classes="muted" />
+                    <TextBlock x:Name="RateEmptyText" Classes="muted" Text="Sin tarifas. Guarde una tarifa 3PL." IsVisible="False" />
+                    <DataGrid x:Name="RateGrid" Height="120" AutoGenerateColumns="True" />
+                </StackPanel>
+            </Border>
+
+            <Border Classes="panel">
+                <StackPanel Spacing="6">
+                    <TextBlock FontWeight="SemiBold" Text="Escaneo RF + industrial" />
+                    <StackPanel Orientation="Horizontal" Spacing="6">
+                        <TextBox x:Name="RfCodeBox" Width="220" PlaceholderText="Código de barras / SSCC" />
+                        <Button Content="Escanear" Click="OnRfScanClick" />
+                        <TextBlock x:Name="RfResultText" Classes="muted" VerticalAlignment="Center" />
+                    </StackPanel>
+                    <StackPanel Orientation="Horizontal" Spacing="6">
+                        <TextBox x:Name="CompanyCodeBox" Width="80" Text="AAA" PlaceholderText="Empresa" />
+                        <TextBox x:Name="CompanyNameBox" Width="160" Text="AAA Holding" PlaceholderText="Razón" />
+                        <TextBox x:Name="FxRateBox" Width="80" Text="1.1" PlaceholderText="USD→EUR" />
+                        <Button Content="Alta empresa" Click="OnCreateCompanyClick" />
+                        <Button Content="Cambio USD→EUR" Click="OnFxClick" />
+                        <TextBlock x:Name="FxResultText" Classes="muted" VerticalAlignment="Center" />
+                    </StackPanel>
+                </StackPanel>
+            </Border>
+
+            <Border Classes="panel">
+                <StackPanel Spacing="6">
+                    <TextBlock FontWeight="SemiBold" Text="Rutas de transporte" />
+                    <StackPanel Orientation="Horizontal" Spacing="6">
+                        <TextBox x:Name="RouteCodeBox" Width="100" PlaceholderText="Código" Text="R1" />
+                        <TextBox x:Name="RouteNameBox" Width="140" PlaceholderText="Nombre" Text="Ruta norte" />
+                        <TextBox x:Name="RouteKmBox" Width="70" Text="100" PlaceholderText="Km" />
+                        <TextBox x:Name="RouteBaseBox" Width="70" Text="50" PlaceholderText="Base" />
+                        <TextBox x:Name="RoutePerKmBox" Width="70" Text="0.8" PlaceholderText="€/km" />
+                        <Button Content="Crear ruta" Click="OnCreateRouteClick" />
+                        <ComboBox x:Name="RouteOrderBox" Width="260" PlaceholderText="Pedido de venta (parada)" />
+                        <Button Content="Añadir parada" Click="OnAddStopClick" />
+                        <Button Content="Actualizar" Click="OnRefreshRoutesClick" />
+                    </StackPanel>
+                    <TextBlock x:Name="RoutesEmptyText" Classes="muted" Text="Sin rutas. Cree una ruta de transporte." IsVisible="False" />
+                    <DataGrid x:Name="RoutesGrid" Height="140" AutoGenerateColumns="True" />
+                </StackPanel>
+            </Border>
+        </StackPanel>
+    </ScrollViewer>
+</UserControl>

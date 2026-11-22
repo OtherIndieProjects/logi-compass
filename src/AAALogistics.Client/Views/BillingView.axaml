@@ -1,0 +1,162 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             x:Class="AAALogistics.Client.Views.BillingView">
+    <DockPanel>
+        <StackPanel DockPanel.Dock="Top" Spacing="8" Margin="0,0,0,8">
+            <StackPanel x:Name="TitleRow" Orientation="Horizontal" Spacing="8">
+                <TextBlock Classes="page-title" Text="Facturas" VerticalAlignment="Center" />
+            </StackPanel>
+            <TextBlock Classes="muted"
+                       Text="Configure «Datos de mi empresa» (razón, CIF, administrador/firma, IBAN, pie legal). Luego emita facturas. PDF… genera el documento; Imprimir abre la impresora Windows."
+                       TextWrapping="Wrap" />
+            <Border Classes="action-bar">
+                <StackPanel Orientation="Horizontal" Spacing="8">
+                    <Button Classes="primary" Content="Actualizar" Click="OnRefreshClick" />
+                    <ComboBox x:Name="CustomerBox" Width="200" SelectionChanged="OnCustomerChanged" />
+                    <ComboBox x:Name="SalesOrderBox" Width="200"
+                              SelectionChanged="OnSalesOrderChanged"
+                              ToolTip.Tip="Pedido opcional: rellena líneas desde el pedido. Vacío = líneas libres." />
+                    <ComboBox x:Name="DeliveryBox" Width="200"
+                              SelectionChanged="OnDeliveryChanged"
+                              PlaceholderText="Albarán → factura"
+                              ToolTip.Tip="Facturar albarán: enlaza pedido y rellena líneas del SO." />
+                    <StackPanel Orientation="Horizontal" Spacing="4" VerticalAlignment="Center">
+                        <TextBox x:Name="SeriesBox" Width="80" Text="A" PlaceholderText="Serie" />
+                        <ContentControl x:Name="SeriesHelpHost" VerticalAlignment="Center" />
+                    </StackPanel>
+                    <StackPanel Orientation="Horizontal" Spacing="4" VerticalAlignment="Center">
+                        <TextBox x:Name="TaxBox" Width="60" Text="21" PlaceholderText="IVA %" />
+                        <ContentControl x:Name="TaxHelpHost" VerticalAlignment="Center" />
+                    </StackPanel>
+                    <TextBox x:Name="DescBox" Width="160" PlaceholderText="Concepto" />
+                    <TextBox x:Name="QtyBox" Width="60" Text="1" PlaceholderText="Cant." />
+                    <TextBox x:Name="PriceBox" Width="80" Text="100" PlaceholderText="Precio" />
+                    <Button Content="Añadir línea" Click="OnAddLineClick"
+                            ToolTip.Tip="Añade concepto/cant./precio al borrador multi-línea." />
+                    <Button Content="Quitar línea" Click="OnRemoveLineClick"
+                            ToolTip.Tip="Quita la línea seleccionada del borrador." />
+                    <TextBox x:Name="RectifyReasonBox" Width="180" PlaceholderText="Motivo rectificativa" Text="Error en datos" />
+                    <Button x:Name="IssueButton" Classes="secondary" Content="Emitir factura" Click="OnIssueClick"
+                            ToolTip.Tip="Emite factura ordinaria al cliente seleccionado." />
+                    <ContentControl x:Name="IssueHelpHost" VerticalAlignment="Center" />
+                    <Button x:Name="RectifyButton" Classes="secondary" Content="Rectificativa / abono" Click="OnRectifyClick"
+                            ToolTip.Tip="Emite factura rectificativa sobre la seleccionada (abono)." />
+                    <ContentControl x:Name="RectifyHelpHost" VerticalAlignment="Center" />
+                    <Button x:Name="PdfButton" Classes="secondary" Content="PDF factura" Click="OnPdfClick"
+                            ToolTip.Tip="Genera y guarda el PDF de la factura." />
+                    <Button x:Name="PrintButton" Classes="secondary" Content="Imprimir" Click="OnPrintClick"
+                            ToolTip.Tip="Abre opciones de impresión (impresora Windows o abrir PDF)." />
+                </StackPanel>
+            </Border>
+            <Border Classes="panel">
+                <StackPanel Spacing="4">
+                    <TextBlock FontWeight="SemiBold" Text="Líneas a emitir" />
+                    <DataGrid x:Name="DraftLinesGrid" Height="88" AutoGenerateColumns="False" />
+                    <TextBlock Classes="muted" FontSize="11"
+                               Text="Atajo SAP: pedido o albarán rellenan el borrador; emita con Emitir factura." />
+                </StackPanel>
+            </Border>
+            <Border Classes="panel">
+                <StackPanel Spacing="8">
+                    <StackPanel Orientation="Horizontal" Spacing="8">
+                        <TextBlock FontWeight="SemiBold" Text="Datos de mi empresa" VerticalAlignment="Center" />
+                        <ContentControl x:Name="IssuerHelpHost" VerticalAlignment="Center" />
+                        <TextBlock Classes="muted" VerticalAlignment="Center"
+                                   Text="Un perfil activo por instalación (RD 1619/2012 art. 6)." />
+                    </StackPanel>
+                    <WrapPanel>
+                        <StackPanel Margin="0,0,12,8" Spacing="2">
+                            <TextBlock Classes="muted" Text="Razón social / Nombre empresa *" />
+                            <TextBox x:Name="IssuerNameBox" Width="220" PlaceholderText="Razón social" />
+                        </StackPanel>
+                        <StackPanel Margin="0,0,12,8" Spacing="2">
+                            <TextBlock Classes="muted" Text="CIF / NIF *" />
+                            <TextBox x:Name="IssuerTaxBox" Width="140" PlaceholderText="CIF/NIF" />
+                        </StackPanel>
+                        <StackPanel Margin="0,0,12,8" Spacing="2">
+                            <TextBlock Classes="muted" Text="Dirección" />
+                            <TextBox x:Name="IssuerAddrBox" Width="200" PlaceholderText="Dirección" />
+                        </StackPanel>
+                        <StackPanel Margin="0,0,12,8" Spacing="2">
+                            <TextBlock Classes="muted" Text="CP" />
+                            <TextBox x:Name="IssuerPostalBox" Width="80" PlaceholderText="CP" />
+                        </StackPanel>
+                        <StackPanel Margin="0,0,12,8" Spacing="2">
+                            <TextBlock Classes="muted" Text="Ciudad" />
+                            <TextBox x:Name="IssuerCityBox" Width="120" PlaceholderText="Ciudad" />
+                        </StackPanel>
+                        <StackPanel Margin="0,0,12,8" Spacing="2">
+                            <TextBlock Classes="muted" Text="Teléfono" />
+                            <TextBox x:Name="IssuerPhoneBox" Width="120" PlaceholderText="Teléfono" />
+                        </StackPanel>
+                        <StackPanel Margin="0,0,12,8" Spacing="2">
+                            <TextBlock Classes="muted" Text="Email" />
+                            <TextBox x:Name="IssuerEmailBox" Width="180" PlaceholderText="facturacion@empresa.es" />
+                        </StackPanel>
+                        <StackPanel Margin="0,0,12,8" Spacing="2">
+                            <TextBlock Classes="muted" Text="Web" />
+                            <TextBox x:Name="IssuerWebBox" Width="160" PlaceholderText="www.empresa.es" />
+                        </StackPanel>
+                    </WrapPanel>
+                    <WrapPanel>
+                        <StackPanel Margin="0,0,12,8" Spacing="2">
+                            <TextBlock Classes="muted" Text="Nombre administrador / firmante" />
+                            <TextBox x:Name="SignerNameBox" Width="200" PlaceholderText="Nombre y apellidos" />
+                        </StackPanel>
+                        <StackPanel Margin="0,0,12,8" Spacing="2">
+                            <TextBlock Classes="muted" Text="Cargo" />
+                            <TextBox x:Name="SignerTitleBox" Width="140" Text="Administrador" PlaceholderText="Cargo" />
+                        </StackPanel>
+                        <StackPanel Margin="0,0,12,8" Spacing="2">
+                            <TextBlock Classes="muted" Text="IBAN" />
+                            <TextBox x:Name="IbanBox" Width="240" PlaceholderText="ES00 0000 0000 00 0000000000" />
+                        </StackPanel>
+                        <StackPanel Margin="0,0,12,8" Spacing="2">
+                            <TextBlock Classes="muted" Text="Banco" />
+                            <TextBox x:Name="BankBox" Width="160" PlaceholderText="Banco" />
+                        </StackPanel>
+                        <StackPanel Margin="0,0,12,8" Spacing="2">
+                            <TextBlock Classes="muted" Text="Forma de pago" />
+                            <TextBox x:Name="PaymentMethodBox" Width="160" PlaceholderText="Transferencia" />
+                        </StackPanel>
+                        <StackPanel Margin="0,0,12,8" Spacing="2">
+                            <TextBlock Classes="muted" Text="Plazo (días)" />
+                            <TextBox x:Name="PaymentDueDaysBox" Width="70" Text="30" PlaceholderText="30" />
+                        </StackPanel>
+                        <StackPanel Margin="0,0,12,8" Spacing="2">
+                            <TextBlock Classes="muted" Text="IRPF % (0 = oculto)" />
+                            <TextBox x:Name="IrpfBox" Width="70" Text="0" PlaceholderText="0" />
+                        </StackPanel>
+                    </WrapPanel>
+                    <StackPanel Spacing="2">
+                        <TextBlock Classes="muted" Text="Pie legal (texto en factura)" />
+                        <TextBox x:Name="LegalFooterBox"
+                                 AcceptsReturn="True"
+                                 TextWrapping="Wrap"
+                                 Height="56"
+                                 Text="Operación sujeta y no exenta de IVA. Factura emitida conforme al RD 1619/2012." />
+                    </StackPanel>
+                    <StackPanel Orientation="Horizontal" Spacing="8">
+                        <Button x:Name="LogoButton" Content="Logo PNG…" Click="OnLogoClick"
+                                ToolTip.Tip="Logo de cabecera (seals/issuer-logo.png)." />
+                        <TextBlock x:Name="LogoPathText" Classes="muted" VerticalAlignment="Center" />
+                        <Button x:Name="SealButton" Content="Sello PNG…" Click="OnSealClick"
+                                ToolTip.Tip="Sello del emisor (seals/issuer-seal.png)." />
+                        <TextBlock x:Name="SealPathText" Classes="muted" VerticalAlignment="Center" />
+                        <Button x:Name="SignatureButton" Content="Firma PNG…" Click="OnSignatureClick"
+                                ToolTip.Tip="Firma (seals/issuer-signature.png). Si no hay firma, el PDF reutiliza el sello." />
+                        <TextBlock x:Name="SignaturePathText" Classes="muted" VerticalAlignment="Center" />
+                        <Button x:Name="IssuerButton" Classes="primary" Content="Guardar empresa" Click="OnIssuerClick" />
+                        <Button x:Name="PreviewPdfButton" Classes="secondary" Content="PDF de prueba"
+                                Click="OnPreviewPdfClick"
+                                ToolTip.Tip="Si hay una factura seleccionada, genera su PDF para revisar el perfil." />
+                    </StackPanel>
+                </StackPanel>
+            </Border>
+            <TextBlock x:Name="StatusText" Classes="error" TextWrapping="Wrap" />
+            <TextBlock x:Name="EmptyHint" Classes="muted" IsVisible="False" TextWrapping="Wrap"
+                       Text="No hay facturas. Guarde los datos de su empresa, elija cliente (y opcionalmente pedido), concepto / cantidad / precio, y pulse Emitir factura." />
+        </StackPanel>
+        <DataGrid x:Name="InvoicesGrid" AutoGenerateColumns="False" />
+    </DockPanel>
+</UserControl>

@@ -1,0 +1,17 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             x:Class="AAALogistics.Client.Views.StudioHubView">
+    <DockPanel>
+        <StackPanel DockPanel.Dock="Top" Spacing="8" Margin="0,0,0,8">
+            <StackPanel x:Name="TitleRow" Orientation="Horizontal" Spacing="8">
+                <TextBlock Classes="page-title" Text="AAA Logistics Studio" VerticalAlignment="Center" />
+            </StackPanel>
+            <TextBlock Classes="muted" TextWrapping="Wrap"
+                       Text="Logi Compass es la brújula logística dentro del Studio. Este mapa lista los módulos P0–P11. Pulse un módulo habilitado para abrirlo; los pendientes muestran ayuda (i) y estado vacío." />
+            <TextBlock x:Name="EmptyHint" Classes="muted" IsVisible="False" TextWrapping="Wrap"
+                       Text="No hay módulos registrados. Reinicie el Cliente." />
+        </StackPanel>
+        <TextBlock x:Name="StatusText" DockPanel.Dock="Bottom" Classes="error" Margin="0,8,0,0" TextWrapping="Wrap" />
+        <DataGrid x:Name="Grid" AutoGenerateColumns="False" DoubleTapped="OnGridDoubleTapped" />
+    </DockPanel>
+</UserControl>

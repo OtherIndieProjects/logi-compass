@@ -1,0 +1,52 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             x:Class="AAALogistics.Client.Views.PrepView">
+    <DockPanel>
+        <StackPanel DockPanel.Dock="Top" Spacing="8" Margin="0,0,0,8">
+            <StackPanel x:Name="TitleRow" Orientation="Horizontal" Spacing="8">
+                <TextBlock Classes="page-title" Text="Preparación / recogida" VerticalAlignment="Center" />
+            </StackPanel>
+            <TextBlock Classes="muted"
+                       Text="ALMACÉN · picking de oficina. Pedidos confirmados listos para preparar. Entre, confirme recogida (FEFO) y marque preparado; la entrega fiscal (DN/PGI) se contabiliza después en Ventas. Escaneo en planta: Almacén RF."
+                       TextWrapping="Wrap" />
+            <Border Classes="action-bar">
+                <StackPanel Orientation="Horizontal" Spacing="8">
+                    <Button Classes="primary" Content="Actualizar" Click="OnRefreshClick" />
+                    <StackPanel Orientation="Horizontal" Spacing="4" VerticalAlignment="Center">
+                        <ComboBox x:Name="ModeBox" Width="160" SelectedIndex="0">
+                            <ComboBoxItem Content="Compartida" Tag="Open" />
+                            <ComboBoxItem Content="Exclusiva" Tag="Exclusive" />
+                        </ComboBox>
+                        <ContentControl x:Name="ModeHelpHost" VerticalAlignment="Center" />
+                    </StackPanel>
+                    <Button x:Name="JoinButton" Classes="secondary" Content="Entrar a preparación" Click="OnJoinClick"
+                            ToolTip.Tip="Une su sesión a este pedido (compartida o exclusiva)." />
+                    <ContentControl x:Name="JoinHelpHost" VerticalAlignment="Center" />
+                    <Button x:Name="LeaveButton" Classes="secondary" Content="Salir de preparación" Click="OnLeaveClick" />
+                    <ContentControl x:Name="LeaveHelpHost" VerticalAlignment="Center" />
+                    <Button x:Name="MarkPreparedButton" Classes="secondary" Content="Marcar preparado" Click="OnMarkPreparedClick" />
+                    <ContentControl x:Name="MarkPreparedHelpHost" VerticalAlignment="Center" />
+                    <Button x:Name="ConfirmPickButton" Classes="secondary" Content="Confirmar recogida" Click="OnConfirmPickClick"
+                            ToolTip.Tip="Confirma la línea de recogida seleccionada (FEFO = primero caduca, primero sale)." />
+                    <ContentControl x:Name="ConfirmPickHelpHost" VerticalAlignment="Center" />
+                    <Button x:Name="CloseButton" Classes="secondary" Content="Cerrar pedido" Click="OnCloseClick" />
+                    <ContentControl x:Name="ClosePrepHelpHost" VerticalAlignment="Center" />
+                </StackPanel>
+            </Border>
+            <TextBlock x:Name="PresenceText" Classes="muted" TextWrapping="Wrap" />
+            <TextBlock x:Name="StatusText" Classes="error" TextWrapping="Wrap" />
+            <TextBlock x:Name="EmptyHint" Classes="muted" IsVisible="False" TextWrapping="Wrap"
+                       Text="No hay pedidos en Confirmado / En preparación / Preparado. Confirme un pedido en Ventas primero." />
+        </StackPanel>
+        <Grid ColumnDefinitions="*,*" RowDefinitions="*,*">
+            <DataGrid x:Name="OrdersGrid" Grid.ColumnSpan="2"
+                      AutoGenerateColumns="False"
+                      SelectionChanged="OnOrderSelected" />
+            <DataGrid x:Name="PresenceGrid" Grid.Row="1" AutoGenerateColumns="False" />
+            <Grid Grid.Row="1" Grid.Column="1" RowDefinitions="*,*">
+                <DataGrid x:Name="LinesGrid" AutoGenerateColumns="False" />
+                <DataGrid x:Name="PicksGrid" Grid.Row="1" AutoGenerateColumns="False" />
+            </Grid>
+        </Grid>
+    </DockPanel>
+</UserControl>

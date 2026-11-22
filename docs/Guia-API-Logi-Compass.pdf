@@ -1,0 +1,111 @@
+%PDF-1.4
+1 0 obj<< /Type /Catalog /Pages 2 0 R >>endobj
+2 0 obj<< /Type /Pages /Kids [4 0 R 6 0 R 8 0 R] /Count 3 >>endobj
+3 0 obj<< /Length 1008 >>stream
+BT /F2 16 Tf 40 760 Td (LOGI COMPASS ? GUIA API v1) Tj
+0 -22 Td /F1 10 Tf
+(AAA Logistics Studio ? API interna Minimal) Tj 0 -13 Td
+(Fecha: 2026-11-22 \(Europe/Madrid\)) Tj 0 -13 Td
+() Tj 0 -13 Td
+(Base URL \(This PC\): http://127.0.0.1:5088) Tj 0 -13 Td
+(OpenAPI JSON:     /openapi/v1.json) Tj 0 -13 Td
+(UI Scalar:        /scalar) Tj 0 -13 Td
+(Prefijo API:      /api/v1/internal) Tj 0 -13 Td
+(Portal B2B:       http://127.0.0.1:5089/api/v1/portal) Tj 0 -13 Td
+() Tj 0 -13 Td
+(Auth: POST /auth/login -> Bearer JWT) Tj 0 -13 Td
+(Refresh: POST /auth/refresh ? Logout: POST /auth/logout) Tj 0 -13 Td
+(Yo: GET /me \(permisos RBAC\)) Tj 0 -13 Td
+() Tj 0 -13 Td
+(Errores: application/problem+json + code AAA-... + traceId) Tj 0 -13 Td
+(401 auth ? 403 permiso/step-up ? 404 ? 409 ? 429 rate-limit) Tj 0 -13 Td
+() Tj 0 -13 Td
+(Documentacion Markdown \(GitHub-ready\):) Tj 0 -13 Td
+(  docs/es/api-guia.md) Tj 0 -13 Td
+(  docs/es/crear-app-logi-compass.md) Tj 0 -13 Td
+ET
+0.22 g 40 24 532 3 re f
+
+endstream
+endobj
+4 0 obj<< /Type /Page /Parent 2 0 R /MediaBox [0 0 612 792] /Contents 3 0 R /Resources << /Font << /F1 9 0 R /F2 10 0 R >> >> >>endobj
+5 0 obj<< /Length 1337 >>stream
+BT /F2 16 Tf 40 760 Td (MAPA DE DOMINIOS) Tj
+0 -22 Td /F1 10 Tf
+(Maestros: /units /materials /warehouses /suppliers /customers) Tj 0 -13 Td
+(          /locations ? /document-number-ranges) Tj 0 -13 Td
+() Tj 0 -13 Td
+(Compras MM: /purchase-orders \(+ pdf, cancel, close\)) Tj 0 -13 Td
+(             /goods-receipts/post ? GET /goods-receipts ? pdf) Tj 0 -13 Td
+() Tj 0 -13 Td
+(Ventas SD:  /quotes \(send/accept/reject/pdf\)) Tj 0 -13 Td
+(             /sales-orders \(confirm/cancel/close/reject/pdf\)) Tj 0 -13 Td
+(             prep: .../prep /picks /mark-prepared) Tj 0 -13 Td
+(             /deliveries/post ? GET /deliveries ? pdf ? packing) Tj 0 -13 Td
+(             /handling-units ? /sales-returns/post) Tj 0 -13 Td
+() Tj 0 -13 Td
+(Inventario: /stock ? movements ? transfers ? putaway) Tj 0 -13 Td
+(             adjustments ? counts ? /rf/scan) Tj 0 -13 Td
+(             hub SignalR /hubs/operations) Tj 0 -13 Td
+() Tj 0 -13 Td
+(Facturas:   /issuer-fiscal \(identidad empresa\)) Tj 0 -13 Td
+(             /invoices ? pdf ? rectify ? QR Verifactu LocalChain) Tj 0 -13 Td
+() Tj 0 -13 Td
+(Oficina:    /carriers ? /cmr ? pdf) Tj 0 -13 Td
+(Informes:   /reports/orders-by-status|otif|stock \(+ pdf\)) Tj 0 -13 Td
+(Auditoria:  /audit/entries ? export ? verify ? checkpoints) Tj 0 -13 Td
+ET
+0.22 g 40 24 532 3 re f
+
+endstream
+endobj
+6 0 obj<< /Type /Page /Parent 2 0 R /MediaBox [0 0 612 792] /Contents 5 0 R /Resources << /Font << /F1 9 0 R /F2 10 0 R >> >> >>endobj
+7 0 obj<< /Length 1255 >>stream
+BT /F2 16 Tf 40 760 Td (FLUJOS RAPIDOS) Tj
+0 -22 Td /F1 10 Tf
+(1\) Login -> GET /stock) Tj 0 -13 Td
+(2\) Quote -> accept -> SO -> confirm -> prep -> deliveries/post) Tj 0 -13 Td
+(3\) PO -> goods-receipts/post -> GET .../pdf) Tj 0 -13 Td
+(4\) issuer-fiscal -> invoices -> pdf \(CIF + razon social\)) Tj 0 -13 Td
+() Tj 0 -13 Td
+(PGI solo si entrega en Preparado / Parcialmente entregado.) Tj 0 -13 Td
+(Postings criticos: idempotencia + step-up 2FA si aplica.) Tj 0 -13 Td
+() Tj 0 -13 Td
+(APP PERSONALIZADA \(estilo GestionAlmacenKngloo\)) Tj 0 -13 Td
+(- Misma API; UI propia; no duplicar stock en otro servidor.) Tj 0 -13 Td
+(- Pantallas: login, materiales, stock, prep, albaran, GR.) Tj 0 -13 Td
+(- Listar por numero/codigo; no pedir GUID al operario.) Tj 0 -13 Td
+(- Probar primero en Scalar \(/scalar\) con Bearer.) Tj 0 -13 Td
+() Tj 0 -13 Td
+(COMO ABRIR SCALAR / OPENAPI) Tj 0 -13 Td
+(1. Iniciar Servidor \(LogisticSolution\).) Tj 0 -13 Td
+(2. Navegador -> http://127.0.0.1:5088/scalar) Tj 0 -13 Td
+(3. Authorize con accessToken del login.) Tj 0 -13 Td
+(4. JSON crudo -> /openapi/v1.json) Tj 0 -13 Td
+() Tj 0 -13 Td
+(Instalacion local: Desktop\\LogisticSolution ? Scalar en :5088/scalar.) Tj 0 -13 Td
+ET
+0.22 g 40 24 532 3 re f
+
+endstream
+endobj
+8 0 obj<< /Type /Page /Parent 2 0 R /MediaBox [0 0 612 792] /Contents 7 0 R /Resources << /Font << /F1 9 0 R /F2 10 0 R >> >> >>endobj
+9 0 obj<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica >>endobj
+10 0 obj<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica-Bold >>endobj
+xref
+0 11
+0000000000 65535 f 
+0000000009 00000 n 
+0000000056 00000 n 
+0000000123 00000 n 
+0000001181 00000 n 
+0000001316 00000 n 
+0000002703 00000 n 
+0000002838 00000 n 
+0000004143 00000 n 
+0000004278 00000 n 
+0000004346 00000 n 
+trailer<< /Size 11 /Root 1 0 R >>
+startxref
+4420
+%%EOF

@@ -1,0 +1,167 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        x:Class="AAALogistics.Client.MainWindow"
+        Title="AAA Logistics Studio"
+        Width="1360"
+        Height="840"
+        MinWidth="1100"
+        MinHeight="680"
+        WindowStartupLocation="CenterScreen"
+        KeyDown="OnWindowKeyDown">
+    <DockPanel>
+        <Border DockPanel.Dock="Top" Classes="shell-header">
+            <Grid RowDefinitions="Auto,Auto">
+                <Grid ColumnDefinitions="*,Auto">
+                    <StackPanel Orientation="Horizontal" Spacing="16" VerticalAlignment="Center">
+                        <Image x:Name="BrandLogo"
+                               Width="36"
+                               Height="36"
+                               Stretch="Uniform"
+                               IsVisible="False"
+                               VerticalAlignment="Center" />
+                        <StackPanel Spacing="0" VerticalAlignment="Center">
+                            <TextBlock x:Name="BrandText"
+                                       Classes="shell-brand"
+                                       Text="AAA Logistics Studio" />
+                            <TextBlock x:Name="BrandTagline"
+                                       Classes="shell-meta"
+                                       Text="Logi Compass · oficina" />
+                        </StackPanel>
+                        <Border Width="1" Height="28" Background="#4A5F73" VerticalAlignment="Center" />
+                        <StackPanel Spacing="2" VerticalAlignment="Center">
+                            <TextBlock x:Name="UserText"
+                                       Classes="shell-status"
+                                       Text="" />
+                            <TextBlock x:Name="PendingBadge"
+                                       Foreground="#FFE2A6"
+                                       FontSize="11"
+                                       Text="" />
+                        </StackPanel>
+                    </StackPanel>
+                    <StackPanel Grid.Column="1" Orientation="Horizontal" Spacing="8" VerticalAlignment="Center">
+                        <Button Classes="shell-primary" Content="Actualizar" Click="OnRefreshClick"
+                                AutomationProperties.Name="Actualizar módulo" />
+                        <Button Classes="ghost" Content="Salir" Click="OnLogoutClick"
+                                AutomationProperties.Name="Cerrar sesión" />
+                    </StackPanel>
+                </Grid>
+            </Grid>
+        </Border>
+
+        <Border DockPanel.Dock="Bottom"
+                Classes="shell-status">
+            <Grid ColumnDefinitions="*,Auto,Auto">
+                <TextBlock x:Name="StatusLeft" Foreground="#9AADC0" FontSize="11" Text="—" />
+                <TextBlock x:Name="StatusCenter" Grid.Column="1" Foreground="#9AADC0" FontSize="11" Margin="16,0" Text="" />
+                <TextBlock x:Name="StatusRight" Grid.Column="2" Foreground="#9AADC0" FontSize="11" Text="" />
+            </Grid>
+        </Border>
+
+        <Border DockPanel.Dock="Left"
+                Width="220"
+                Classes="nav-rail">
+            <ScrollViewer HorizontalScrollBarVisibility="Disabled">
+                <StackPanel x:Name="NavPanel" Spacing="0">
+                    <Button x:Name="NavHome" Classes="nav selected" Content="Inicio" Tag="home" Click="OnNavClick" />
+
+                    <TextBlock x:Name="NavGroupStudio" Classes="nav-group" Text="STUDIO" />
+                    <Button x:Name="NavStudio" Classes="nav" Content="Mapa Studio"
+                            ToolTip.Tip="AAA Logistics Studio: módulos P0–P11 (Logi Compass = brújula)"
+                            Tag="studio" Click="OnNavClick" IsVisible="False" />
+                    <Button x:Name="NavPricing" Classes="nav" Content="Precios / IVA / RMA"
+                            ToolTip.Tip="Condiciones, impuestos, crédito y RMA (devoluciones de cliente)"
+                            Tag="pricing" Click="OnNavClick" IsVisible="False" />
+                    <Button x:Name="NavMm" Classes="nav" Content="Compras MM"
+                            ToolTip.Tip="Contratos; RFQ (solicitud de oferta); 3-way (pedido+recepción+factura); valoración"
+                            Tag="mm" Click="OnNavClick" IsVisible="False" />
+                    <Button x:Name="NavFinance" Classes="nav" Content="Finanzas"
+                            ToolTip.Tip="Plan de cuentas, asientos, centros de coste"
+                            Tag="finance" Click="OnNavClick" IsVisible="False" />
+                    <Button x:Name="NavPp" Classes="nav" Content="Producción"
+                            ToolTip.Tip="BOM (lista de materiales), rutas, OF (orden de fabricación), MRP (necesidades)"
+                            Tag="pp" Click="OnNavClick" IsVisible="False" />
+                    <Button x:Name="NavQm" Classes="nav" Content="Calidad"
+                            ToolTip.Tip="Inspecciones y certificados de calidad"
+                            Tag="qm" Click="OnNavClick" IsVisible="False" />
+                    <Button x:Name="NavOrg" Classes="nav" Content="Sociedad / planta"
+                            ToolTip.Tip="Contexto multi-empresa (sociedad y planta)"
+                            Tag="org" Click="OnNavClick" IsVisible="False" />
+                    <Button x:Name="NavWorkflow" Classes="nav" Content="Aprobaciones"
+                            ToolTip.Tip="Reglas y cola de aprobaciones (cuatro ojos)"
+                            Tag="workflow" Click="OnNavClick" IsVisible="False" />
+                    <Button x:Name="NavIntHub" Classes="nav" Content="Intercambio de datos"
+                            ToolTip.Tip="Conectores; bandeja de entrada/salida; mapeos externos"
+                            Tag="inthub" Click="OnNavClick" IsVisible="False" />
+                    <Button x:Name="NavBi" Classes="nav" Content="BI / paneles"
+                            ToolTip.Tip="Stock valorado; antigüedad de cobro (aging); OTIF (a tiempo y completo)"
+                            Tag="bi" Click="OnNavClick" IsVisible="False" />
+                    <Button x:Name="NavHr" Classes="nav" Content="RRHH lite"
+                            ToolTip.Tip="Fichas de empleado ligadas a Cuentas"
+                            Tag="hr" Click="OnNavClick" IsVisible="False" />
+                    <Button x:Name="NavExt" Classes="nav" Content="Extensibilidad"
+                            ToolTip.Tip="Eventos, plugins y transportes de configuración"
+                            Tag="ext" Click="OnNavClick" IsVisible="False" />
+
+                    <TextBlock x:Name="NavGroupMaestros" Classes="nav-group" Text="MAESTROS" />
+                    <Button x:Name="NavCatalog" Classes="nav" Content="Maestros"
+                            ToolTip.Tip="Materiales, unidades, almacenes, proveedores, clientes"
+                            Tag="catalog" Click="OnNavClick" />
+                    <Button x:Name="NavWarehouses" Classes="nav" Content="Ubicaciones"
+                            ToolTip.Tip="Estructura de almacén y colocación en hueco"
+                            Tag="warehouses" Click="OnNavClick" />
+
+                    <TextBlock x:Name="NavGroupCompras" Classes="nav-group" Text="COMPRAS" />
+                    <Button x:Name="NavPurchases" Classes="nav" Content="Pedidos de compra"
+                            ToolTip.Tip="Crear PO y contabilizar recepciones"
+                            Tag="purchases" Click="OnNavClick" />
+
+                    <TextBlock x:Name="NavGroupVentas" Classes="nav-group" Text="VENTAS" />
+                    <Button x:Name="NavSales" Classes="nav" Content="Pedidos de venta"
+                            ToolTip.Tip="Pedido de venta, confirmar y contabilizar entrega (DN/PGI)"
+                            Tag="sales" Click="OnNavClick" />
+                    <Button x:Name="NavQuotes" Classes="nav" Content="Presupuestos"
+                            ToolTip.Tip="Ofertas al cliente; aceptar crea pedido de venta"
+                            Tag="quotes" Click="OnNavClick" />
+                    <Button x:Name="NavBilling" Classes="nav" Content="Facturas"
+                            ToolTip.Tip="Facturación fiscal del pedido entregado"
+                            Tag="billing" Click="OnNavClick" />
+
+                    <TextBlock x:Name="NavGroupAlmacen" Classes="nav-group" Text="ALMACÉN" />
+                    <Button x:Name="NavInventory" Classes="nav" Content="Inventario"
+                            ToolTip.Tip="Stock, traspasos, ajustes y conteos"
+                            Tag="inventory" Click="OnNavClick" />
+                    <Button x:Name="NavPrep" Classes="nav" Content="Preparación"
+                            ToolTip.Tip="Picking de oficina: cola de pedidos a preparar (antes de la entrega)"
+                            Tag="prep" Click="OnNavClick" />
+                    <Button x:Name="NavWarehouseRf" Classes="nav" Content="Almacén RF"
+                            ToolTip.Tip="Escaneo en planta: putaway, confirmar picking y conteo (no sustituye Preparación)"
+                            Tag="warehouserf" Click="OnNavClick" IsVisible="False" />
+                    <Button x:Name="NavOffice" Classes="nav" Content="Oficina / CMR"
+                            Tag="office" Click="OnNavClick" />
+                    <Button x:Name="NavLab" Classes="nav" Content="Lab (apéndice)"
+                            ToolTip.Tip="Apéndice experimental; RF de producción en Almacén RF"
+                            Tag="lab" Click="OnNavClick" />
+
+                    <TextBlock x:Name="NavGroupSistema" Classes="nav-group" Text="SISTEMA" />
+                    <Button x:Name="NavBranding" Classes="nav" Content="Apariencia / Marca"
+                            ToolTip.Tip="Nombre, logo y color del programa (no datos fiscales)"
+                            Tag="branding" Click="OnNavClick" IsVisible="False" />
+                    <Button x:Name="NavRegistration" Classes="nav" Content="Registro"
+                            Tag="registration" Click="OnNavClick" />
+                    <Button x:Name="NavReports" Classes="nav" Content="Informes"
+                            Tag="reports" Click="OnNavClick" />
+                    <Button x:Name="NavAudit" Classes="nav" Content="Auditoría"
+                            Tag="audit" Click="OnNavClick" />
+                    <Button x:Name="NavAccounts" Classes="nav" Content="Cuentas"
+                            Tag="accounts" Click="OnNavClick" />
+                    <Button x:Name="NavIntegrations" Classes="nav" Content="Integraciones SAP"
+                            Tag="integrations" Click="OnNavClick" />
+                </StackPanel>
+            </ScrollViewer>
+        </Border>
+
+        <Border Padding="14" Background="#F5F6F7">
+            <ContentControl x:Name="WorkArea" />
+        </Border>
+    </DockPanel>
+</Window>

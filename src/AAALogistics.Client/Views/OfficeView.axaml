@@ -1,0 +1,66 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             x:Class="AAALogistics.Client.Views.OfficeView">
+    <DockPanel>
+        <StackPanel DockPanel.Dock="Top" Spacing="8" Margin="0,0,0,8">
+            <StackPanel x:Name="TitleRow" Orientation="Horizontal" Spacing="8">
+                <TextBlock Classes="page-title" Text="Oficina / CMR" VerticalAlignment="Center" />
+            </StackPanel>
+            <TextBlock Classes="muted"
+                       Text="Alta de transportistas, emisión CMR, PDF de albarán y aprobación de bajas de material (cuatro ojos)."
+                       TextWrapping="Wrap" />
+            <Border Classes="action-bar">
+                <StackPanel Orientation="Horizontal" Spacing="8">
+                    <Button Classes="primary" Content="Actualizar" Click="OnRefreshClick" />
+                    <TextBox x:Name="CarrierCodeBox" Width="80" PlaceholderText="Cód." />
+                    <TextBox x:Name="CarrierNameBox" Width="140" PlaceholderText="Transportista" />
+                    <Button x:Name="CreateCarrierButton" Classes="secondary" Content="Alta transportista" Click="OnCreateCarrierClick" />
+                    <ContentControl x:Name="CarrierHelpHost" VerticalAlignment="Center" />
+                </StackPanel>
+            </Border>
+            <Border Classes="action-bar">
+                <StackPanel Orientation="Horizontal" Spacing="8">
+                    <ComboBox x:Name="CarrierBox" Width="200" />
+                    <TextBox x:Name="PlateBox" Width="100" PlaceholderText="Matrícula" />
+                    <TextBox x:Name="PackagesBox" Width="60" Text="1" PlaceholderText="Bultos" />
+                    <Button x:Name="CreateCmrButton" Classes="secondary" Content="Emitir CMR" Click="OnCreateCmrClick"
+                            ToolTip.Tip="Documento de transporte internacional (CMR); no contabiliza la entrega." />
+                    <ContentControl x:Name="CmrHelpHost" VerticalAlignment="Center" />
+                    <Button x:Name="CmrPdfButton" Classes="secondary" Content="PDF CMR" Click="OnPdfClick" />
+                    <ContentControl x:Name="CmrPdfHelpHost" VerticalAlignment="Center" />
+                    <Button x:Name="CmrPrintButton" Classes="secondary" Content="Imprimir CMR" Click="OnPrintCmrClick" />
+                    <ComboBox x:Name="DeliveryBox" Width="280" PlaceholderText="Elija albarán por número" />
+                    <Button x:Name="DnPdfButton" Classes="secondary" Content="PDF albarán" Click="OnDeliveryPdfClick" />
+                    <ContentControl x:Name="DnPdfHelpHost" VerticalAlignment="Center" />
+                    <Button x:Name="DnPrintButton" Classes="secondary" Content="Imprimir albarán" Click="OnPrintDeliveryClick" />
+                </StackPanel>
+            </Border>
+            <Border Classes="action-bar">
+                <StackPanel Orientation="Horizontal" Spacing="8">
+                    <Button x:Name="ApproveDeletionButton" Classes="secondary" Content="Aprobar baja seleccionada" Click="OnApproveDeletionClick" />
+                    <ContentControl x:Name="ApproveDeletionHelpHost" VerticalAlignment="Center" />
+                    <Button x:Name="RejectDeletionButton" Classes="secondary" Content="Rechazar baja" Click="OnRejectDeletionClick" />
+                    <ContentControl x:Name="RejectDeletionHelpHost" VerticalAlignment="Center" />
+                </StackPanel>
+            </Border>
+            <TextBlock x:Name="StatusText" Classes="error" TextWrapping="Wrap" />
+            <TextBlock x:Name="LastCmrText" Classes="muted" />
+            <TextBlock x:Name="EmptyHint" Classes="muted" IsVisible="False" TextWrapping="Wrap"
+                       Text="Sin pedidos listos para CMR ni bajas pendientes. Confirme/prepare pedidos en Ventas o solicite baja en Maestros." />
+        </StackPanel>
+        <Grid ColumnDefinitions="*,*" RowDefinitions="*,*">
+            <StackPanel>
+                <TextBlock Classes="muted" Margin="0,0,0,4" Text="Pedidos (CMR)" />
+                <DataGrid x:Name="OrdersGrid" AutoGenerateColumns="False" Height="180" />
+            </StackPanel>
+            <StackPanel Grid.Column="1" Margin="8,0,0,0">
+                <TextBlock Classes="muted" Margin="0,0,0,4" Text="Transportistas" />
+                <DataGrid x:Name="CarriersGrid" AutoGenerateColumns="False" Height="180" />
+            </StackPanel>
+            <StackPanel Grid.Row="1" Grid.ColumnSpan="2" Margin="0,8,0,0">
+                <TextBlock Classes="muted" Margin="0,0,0,4" Text="Bajas de material pendientes de aprobación" />
+                <DataGrid x:Name="DeletionGrid" AutoGenerateColumns="False" Height="160" />
+            </StackPanel>
+        </Grid>
+    </DockPanel>
+</UserControl>

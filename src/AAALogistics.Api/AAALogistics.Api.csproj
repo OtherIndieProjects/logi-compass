@@ -1,0 +1,12 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <RootNamespace>AAALogistics.Api</RootNamespace>
+  </PropertyGroup>
+  <ItemGroup>
+    <FrameworkReference Include="Microsoft.AspNetCore.App" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\AAALogistics.Application\AAALogistics.Application.csproj" />
+    <ProjectReference Include="..\AAALogistics.Contracts\AAALogistics.Contracts.csproj" />
+  </ItemGroup>
+</Project>

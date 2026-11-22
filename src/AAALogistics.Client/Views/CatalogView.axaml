@@ -1,0 +1,73 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             x:Class="AAALogistics.Client.Views.CatalogView">
+    <DockPanel>
+        <StackPanel DockPanel.Dock="Top" Spacing="10" Margin="0,0,0,10">
+            <StackPanel x:Name="TitleRow" Orientation="Horizontal" Spacing="8">
+                <TextBlock Classes="page-title" Text="Maestros" VerticalAlignment="Center" />
+            </StackPanel>
+            <TextBlock Classes="muted"
+                       Text="Alta, edición y consulta de materiales, unidades, almacenes, proveedores y clientes."
+                       TextWrapping="Wrap" />
+            <Border Classes="action-bar">
+                <StackPanel Orientation="Horizontal" Spacing="8">
+                    <Button Classes="primary" Content="Actualizar" Click="OnRefreshClick"
+                            ToolTip.Tip="Recargar datos del servidor" />
+                    <Button x:Name="NewButton" Classes="primary" Content="Nuevo…" Click="OnNewClick"
+                            ToolTip.Tip="Crear registro en la pestaña actual" />
+                    <Button x:Name="EditButton" Classes="secondary" Content="Editar…" Click="OnEditClick"
+                            ToolTip.Tip="Editar el registro seleccionado" />
+                    <Button x:Name="DeactivateButton" Classes="secondary" Content="Desactivar" Click="OnDeactivateClick"
+                            ToolTip.Tip="Desactiva o reactiva (PUT IsActive). No borra documentos ni stock." />
+                    <Button x:Name="DeleteMaterialButton" Classes="secondary" Content="Eliminar / Dar de baja…" Click="OnDeleteMaterialClick"
+                            ToolTip.Tip="Baja formal del material (con aprobación 4 ojos si hay stock). Requiere permiso Material.Delete." />
+                    <TextBox x:Name="SearchBox" Width="240" PlaceholderText="Buscar…"
+                             TextChanged="OnSearchChanged" />
+                    <Button x:Name="MoreButton" Classes="secondary" Content="Más acciones ▾" Click="OnMoreClick" />
+                </StackPanel>
+            </Border>
+            <TabControl x:Name="EntityTabs" SelectionChanged="OnTabChanged">
+                <TabItem Tag="materials" />
+                <TabItem Tag="units" />
+                <TabItem Tag="warehouses" />
+                <TabItem Tag="suppliers" />
+                <TabItem Tag="customers" />
+            </TabControl>
+            <Border Classes="message-strip" x:Name="HintStrip">
+                <TextBlock x:Name="HintText"
+                           Text="Pulse Nuevo… para crear un material."
+                           TextWrapping="Wrap" />
+            </Border>
+            <StackPanel x:Name="UnitsToolsPanel" Spacing="8" IsVisible="False">
+                <StackPanel Orientation="Horizontal" Spacing="8">
+                    <TextBlock Classes="muted"
+                               Text="Conversiones UoM (factor: 1 unidad origen = factor × unidad destino)."
+                               TextWrapping="Wrap"
+                               VerticalAlignment="Center" />
+                    <ContentControl x:Name="UomHelpHost" VerticalAlignment="Center" />
+                </StackPanel>
+                <StackPanel Orientation="Horizontal" Spacing="8">
+                    <Button Classes="secondary" Content="Cargar conversiones" Click="OnRefreshConversionsClick" />
+                    <Button Classes="primary" Content="Nueva conversión…" Click="OnNewConversionClick" />
+                    <Button Classes="secondary" Content="Seed UN/KG/L/PCS" Click="OnSeedUnitsClick"
+                            ToolTip.Tip="Crea UN, KG, L y PCS si faltan" />
+                </StackPanel>
+                <DataGrid x:Name="ConversionsGrid"
+                          Height="140"
+                          AutoGenerateColumns="False"
+                          IsReadOnly="True"
+                          CanUserSortColumns="True"
+                          CanUserResizeColumns="True" />
+            </StackPanel>
+            <TextBlock x:Name="StatusText" Classes="error" TextWrapping="Wrap" />
+            <TextBlock x:Name="EmptyHint" Classes="muted" IsVisible="False"
+                       Text="No hay registros. Pulse Nuevo… para crear el primero." />
+        </StackPanel>
+        <DataGrid x:Name="Grid"
+                  AutoGenerateColumns="False"
+                  IsReadOnly="True"
+                  CanUserSortColumns="True"
+                  CanUserResizeColumns="True"
+                  SelectionChanged="OnGridSelectionChanged" />
+    </DockPanel>
+</UserControl>

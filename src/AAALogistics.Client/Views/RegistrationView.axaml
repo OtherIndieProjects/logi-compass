@@ -1,0 +1,25 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             x:Class="AAALogistics.Client.Views.RegistrationView">
+    <DockPanel>
+        <StackPanel DockPanel.Dock="Top" Spacing="8" Margin="0,0,0,8">
+            <StackPanel x:Name="TitleRow" Orientation="Horizontal" Spacing="8">
+                <TextBlock Classes="page-title" Text="Registro" VerticalAlignment="Center" />
+            </StackPanel>
+            <Border Classes="action-bar">
+                <StackPanel Orientation="Horizontal" Spacing="8">
+                    <Button Classes="primary" Content="Actualizar" Click="OnRefreshClick" />
+                    <Button x:Name="ApproveButton" Classes="secondary" Content="Aprobar" Click="OnApproveClick"
+                            ToolTip.Tip="Requiere permiso de registro; confirme en el diálogo si aparece." />
+                    <ContentControl x:Name="ApproveHelpHost" VerticalAlignment="Center" />
+                    <Button x:Name="RejectButton" Classes="secondary" Content="Rechazar" Click="OnRejectClick" />
+                    <TextBox x:Name="ReasonBox" Width="220" PlaceholderText="Motivo del rechazo" />
+                </StackPanel>
+            </Border>
+            <TextBlock x:Name="EmptyHint" Classes="muted" IsVisible="False" TextWrapping="Wrap"
+                       Text="No hay solicitudes de registro pendientes. Tras aprobar, asigne rangos en Cuentas." />
+        </StackPanel>
+        <TextBlock x:Name="StatusText" DockPanel.Dock="Bottom" Classes="error" Margin="0,8,0,0" TextWrapping="Wrap" />
+        <DataGrid x:Name="Grid" AutoGenerateColumns="False" />
+    </DockPanel>
+</UserControl>

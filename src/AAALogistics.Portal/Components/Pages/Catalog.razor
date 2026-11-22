@@ -1,0 +1,77 @@
+@page "/catalogo"
+@rendermode InteractiveServer
+@using System.Globalization
+@using AAALogistics.Contracts
+@using AAALogistics.Portal.Services
+@inject PortalApiClient Api
+@inject PortalSession Session
+
+<PageTitle>Catálogo</PageTitle>
+
+<h1>Catálogo</h1>
+<p>Materiales activos publicados por el servidor. El precio es informativo.</p>
+
+@if (!string.IsNullOrEmpty(_error))
+{
+    <p class="form-error">@_error</p>
+}
+else if (_items is null)
+{
+    <p>Cargando materiales…</p>
+}
+else if (_items.Count == 0)
+{
+    <p>No hay materiales activos.</p>
+}
+else
+{
+    <table class="data">
+        <thead>
+            <tr>
+                <th>Código</th>
+                <th>Descripción</th>
+                <th>Precio</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in _items)
+            {
+                <tr>
+                    <td>@item.Code</td>
+                    <td>@item.Description</td>
+                    <td>@item.CatalogPrice.ToString("N2", Culture) @item.Currency</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+
+@code {
+    private static readonly CultureInfo Culture = CultureInfo.GetCultureInfo("es-ES");
+
+    private IReadOnlyList<PortalCatalogItemResponse>? _items;
+    private string? _error;
+
+    protected override async Task OnInitializedAsync()
+    {
+        try
+        {
+            if (!Session.IsAuthenticated || Session.AccessToken is null)
+            {
+                _error = "Inicie sesión para ver el catálogo.";
+                _items = [];
+                return;
+            }
+
+            _items = await Api.GetCatalogAsync(Session.AccessToken);
+        }
+        catch (Exception exception) when (exception is PortalApiException
+            or HttpRequestException
+            or TaskCanceledException)
+        {
+            _error = exception is TaskCanceledException
+                ? "El servidor no respondió a tiempo."
+                : exception.Message;
+        }
+    }
+}

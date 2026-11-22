@@ -1,0 +1,201 @@
+@page "/registro"
+@rendermode InteractiveServer
+@using System.ComponentModel.DataAnnotations
+@using System.Globalization
+@using System.Security.Cryptography
+@using System.Text
+@using AAALogistics.Contracts
+@using AAALogistics.Portal.Services
+@inject PortalApiClient Api
+
+<PageTitle>Registro</PageTitle>
+
+<h1>Solicitud de registro</h1>
+<p>La solicitud se guarda como pendiente. Un administrador la aprueba a mano; este formulario no crea todavía el cliente ni el usuario.</p>
+
+<EditForm Model="_model" OnValidSubmit="SubmitAsync">
+    <DataAnnotationsValidator />
+    <ValidationSummary />
+    <label>
+        Empresa
+        <InputText @bind-Value="_model.CompanyName" />
+    </label>
+    <label>
+        Identificador fiscal
+        <InputText @bind-Value="_model.TaxId" />
+    </label>
+    <label>
+        Contacto
+        <InputText @bind-Value="_model.ContactName" />
+    </label>
+    <label>
+        Correo
+        <InputText @bind-Value="_model.Email" />
+    </label>
+    <label>
+        Usuario deseado
+        <InputText @bind-Value="_model.UserName" />
+    </label>
+    <label>
+        Dirección
+        <InputText @bind-Value="_model.AddressLine1" />
+    </label>
+    <label>
+        Ciudad
+        <InputText @bind-Value="_model.City" />
+    </label>
+    <label>
+        Código postal
+        <InputText @bind-Value="_model.PostalCode" />
+    </label>
+    <label>
+        País
+        <InputText @bind-Value="_model.CountryCode" />
+    </label>
+    <label class="honeypot" aria-hidden="true">
+        Sitio web
+        <InputText @bind-Value="_model.Website" autocomplete="off" tabindex="-1" />
+    </label>
+    <label>
+        <InputCheckbox @bind-Value="_model.AcceptTerms" />
+        Acepto los textos legales aplicables.
+    </label>
+    <button type="submit" disabled="@_busy">Enviar solicitud</button>
+</EditForm>
+
+@if (!string.IsNullOrEmpty(_message))
+{
+    <p class="@(_failed ? "form-error" : "form-ok")">@_message</p>
+}
+
+@code {
+    private readonly RegistrationForm _model = new();
+    private string? _message;
+    private bool _failed;
+    private bool _busy;
+
+    private async Task SubmitAsync()
+    {
+        _busy = true;
+        _message = null;
+        _failed = false;
+        try
+        {
+            string? challenge = null;
+            string? nonce = null;
+            var pow = await Api.GetPowChallengeAsync();
+            if (pow is not null && pow.DifficultyBits > 0)
+            {
+                challenge = pow.Challenge;
+                nonce = SolveProofOfWork(pow.Challenge, pow.DifficultyBits);
+            }
+
+            var result = await Api.RegisterAsync(
+                new SubmitRegistrationRequest(
+                    _model.CompanyName,
+                    _model.TaxId,
+                    _model.ContactName,
+                    _model.Email,
+                    _model.UserName,
+                    _model.AddressLine1,
+                    _model.City,
+                    _model.PostalCode,
+                    _model.CountryCode,
+                    _model.AcceptTerms,
+                    _model.Website,
+                    challenge,
+                    nonce));
+            _message = $"{result.Message} Estado: {result.Status}.";
+        }
+        catch (Exception exception) when (exception is PortalApiException
+            or HttpRequestException
+            or TaskCanceledException)
+        {
+            _failed = true;
+            _message = exception is TaskCanceledException
+                ? "El servidor no respondió a tiempo."
+                : exception.Message;
+        }
+        finally
+        {
+            _busy = false;
+        }
+    }
+
+    private static string SolveProofOfWork(string challenge, int difficultyBits)
+    {
+        for (var i = 0L; i < long.MaxValue; i++)
+        {
+            var nonce = i.ToString(CultureInfo.InvariantCulture);
+            var payload = Encoding.UTF8.GetBytes($"{challenge}:{nonce}");
+            var hash = SHA256.HashData(payload);
+            if (MeetsDifficulty(hash, difficultyBits))
+            {
+                return nonce;
+            }
+        }
+
+        throw new InvalidOperationException("No se pudo resolver el PoW.");
+    }
+
+    private static bool MeetsDifficulty(byte[] hash, int difficultyBits)
+    {
+        var bits = difficultyBits;
+        var index = 0;
+        while (bits >= 8)
+        {
+            if (hash[index] != 0)
+            {
+                return false;
+            }
+
+            index++;
+            bits -= 8;
+        }
+
+        if (bits == 0)
+        {
+            return true;
+        }
+
+        var mask = (byte)(0xFF << (8 - bits));
+        return (hash[index] & mask) == 0;
+    }
+
+    private sealed class RegistrationForm
+    {
+        [Required(ErrorMessage = "Indique la empresa.")]
+        public string CompanyName { get; set; } = string.Empty;
+
+        [Required(ErrorMessage = "Indique el identificador fiscal.")]
+        public string TaxId { get; set; } = string.Empty;
+
+        [Required(ErrorMessage = "Indique el contacto.")]
+        public string ContactName { get; set; } = string.Empty;
+
+        [Required(ErrorMessage = "Indique el correo.")]
+        [EmailAddress(ErrorMessage = "El correo no es válido.")]
+        public string Email { get; set; } = string.Empty;
+
+        [Required(ErrorMessage = "Indique el usuario.")]
+        public string UserName { get; set; } = string.Empty;
+
+        [Required(ErrorMessage = "Indique la dirección.")]
+        public string AddressLine1 { get; set; } = string.Empty;
+
+        [Required(ErrorMessage = "Indique la ciudad.")]
+        public string City { get; set; } = string.Empty;
+
+        [Required(ErrorMessage = "Indique el código postal.")]
+        public string PostalCode { get; set; } = string.Empty;
+
+        [Required(ErrorMessage = "Indique el país.")]
+        [StringLength(2, MinimumLength = 2, ErrorMessage = "Use el código de país de dos letras.")]
+        public string CountryCode { get; set; } = "ES";
+
+        [Range(typeof(bool), "true", "true", ErrorMessage = "Debe aceptar los textos legales.")]
+        public bool AcceptTerms { get; set; }
+
+        public string Website { get; set; } = string.Empty;
+    }
+}

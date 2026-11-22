@@ -1,0 +1,52 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             x:Class="AAALogistics.Client.Views.BrandingView">
+    <DockPanel>
+        <StackPanel DockPanel.Dock="Top" Spacing="8" Margin="0,0,0,8">
+            <StackPanel x:Name="TitleRow" Orientation="Horizontal" Spacing="8">
+                <TextBlock Classes="page-title" Text="Apariencia / Marca" VerticalAlignment="Center" />
+            </StackPanel>
+            <TextBlock Classes="muted" TextWrapping="Wrap"
+                       Text="Cambia el nombre y logo del programa en pantallas y PDFs. Los datos fiscales de factura (CIF, firma, IBAN) están en Facturas → Datos de mi empresa." />
+            <Border Classes="action-bar">
+                <StackPanel Orientation="Horizontal" Spacing="8">
+                    <Button Classes="primary" Content="Actualizar" Click="OnRefreshClick" />
+                    <Button x:Name="SaveButton" Classes="primary" Content="Guardar marca" Click="OnSaveClick" />
+                    <Button x:Name="PickLogoButton" Classes="secondary" Content="Elegir logo…" Click="OnPickLogoClick"
+                            ToolTip.Tip="PNG, JPG o JPEG (máx. 2 MB). No SVG." />
+                    <Button x:Name="ClearLogoButton" Classes="secondary" Content="Quitar logo" Click="OnClearLogoClick" />
+                </StackPanel>
+            </Border>
+            <Border Classes="panel">
+                <StackPanel Spacing="8">
+                    <TextBlock FontWeight="SemiBold" Text="Identidad del producto" />
+                    <StackPanel Orientation="Horizontal" Spacing="12">
+                        <StackPanel Spacing="2">
+                            <TextBlock Classes="muted" Text="Nombre comercial" />
+                            <TextBox x:Name="DisplayNameBox" Width="280" PlaceholderText="Ej. Mi Empresa Logistics" />
+                        </StackPanel>
+                        <StackPanel Spacing="2">
+                            <TextBlock Classes="muted" Text="Color acento (#RRGGBB)" />
+                            <TextBox x:Name="AccentBox" Width="120" Text="#0A6ED1" />
+                        </StackPanel>
+                        <StackPanel Spacing="2">
+                            <TextBlock Classes="muted" Text="Lema (opcional)" />
+                            <TextBox x:Name="TaglineBox" Width="280" PlaceholderText="Oficina logística" />
+                        </StackPanel>
+                    </StackPanel>
+                    <StackPanel Orientation="Horizontal" Spacing="16">
+                        <Border Width="160" Height="80" BorderBrush="#D9D9D9" BorderThickness="1" Background="#FFFFFF">
+                            <Image x:Name="LogoPreview" Stretch="Uniform" Margin="8" />
+                        </Border>
+                        <StackPanel Spacing="4" VerticalAlignment="Center">
+                            <TextBlock x:Name="PreviewName" FontSize="18" FontWeight="Bold" Text="Logi Compass" />
+                            <TextBlock x:Name="PreviewTagline" Classes="muted" Text="" />
+                            <Border x:Name="AccentSwatch" Width="80" Height="12" CornerRadius="2" Background="#0A6ED1" />
+                        </StackPanel>
+                    </StackPanel>
+                </StackPanel>
+            </Border>
+            <TextBlock x:Name="StatusText" Classes="error" TextWrapping="Wrap" />
+        </StackPanel>
+    </DockPanel>
+</UserControl>

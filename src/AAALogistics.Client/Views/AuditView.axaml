@@ -1,0 +1,80 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             x:Class="AAALogistics.Client.Views.AuditView">
+    <DockPanel>
+        <StackPanel DockPanel.Dock="Top" Spacing="8" Margin="0,0,0,8">
+            <StackPanel x:Name="TitleRow" Orientation="Horizontal" Spacing="8">
+                <TextBlock Classes="page-title" Text="Auditoría" VerticalAlignment="Center" />
+            </StackPanel>
+            <TextBlock Classes="muted" TextWrapping="Wrap"
+                       Text="Consulta por área: quién cambió qué, cuándo, y valores anterior → nuevo. Solo lectura." />
+            <TabControl x:Name="AreaTabs" SelectionChanged="OnTabChanged">
+                <TabItem Tag="accesos" Header="Accesos" />
+                <TabItem Tag="maestros" Header="Maestros" />
+                <TabItem Tag="compras" Header="Compras" />
+                <TabItem Tag="ventas" Header="Ventas" />
+                <TabItem Tag="preparacion" Header="Preparación" />
+                <TabItem Tag="inventario" Header="Inventario" />
+                <TabItem Tag="facturas" Header="Facturas" />
+                <TabItem Tag="cuentas" Header="Cuentas" />
+                <TabItem Tag="studio" Header="Studio/Sistema" />
+            </TabControl>
+            <WrapPanel Margin="0,4,0,0">
+                <StackPanel Orientation="Horizontal" Spacing="8" Margin="0,0,12,8">
+                    <TextBox x:Name="FromBox" Width="150" PlaceholderText="Desde (UTC yyyy-MM-dd)" />
+                    <TextBox x:Name="ToBox" Width="150" PlaceholderText="Hasta (UTC yyyy-MM-dd)" />
+                    <TextBox x:Name="UserBox" Width="140" PlaceholderText="Usuario" />
+                    <TextBox x:Name="TableBox" Width="140" PlaceholderText="Tabla" />
+                    <TextBox x:Name="ActionBox" Width="120" PlaceholderText="Acción" />
+                </StackPanel>
+                <StackPanel Orientation="Horizontal" Spacing="8" Margin="0,0,0,8">
+                    <Button Classes="primary" Content="Buscar" Click="OnRefreshClick" />
+                    <Button Content="Anterior" Click="OnPrevPageClick" />
+                    <Button Content="Siguiente" Click="OnNextPageClick" />
+                    <TextBlock x:Name="PageText" Classes="muted" VerticalAlignment="Center" Text="Pág. 1" />
+                    <Button Content="Exportar CSV" Click="OnExportCsvClick" />
+                    <Button Content="Exportar JSON" Click="OnExportJsonClick" />
+                    <Button Content="PDF auditoría" Click="OnExportPdfClick"
+                            ToolTip.Tip="Extracto PDF (quién / qué / cuándo) con los filtros actuales." />
+                    <Button Content="Imprimir" Click="OnPrintPdfClick"
+                            ToolTip.Tip="Imprime el extracto PDF filtrado (impresora Windows)." />
+                    <Button x:Name="VerifyButton" Content="Verificar cadena" Click="OnVerifyClick"
+                            ToolTip.Tip="Solo Administrador." />
+                    <Button x:Name="CheckpointButton" Content="Punto de control" Click="OnCheckpointClick"
+                            ToolTip.Tip="Solo Administrador. Guarda manifiesto externo sin borrar la cadena." />
+                </StackPanel>
+            </WrapPanel>
+            <TextBlock x:Name="EmptyHint" Classes="muted" IsVisible="False" TextWrapping="Wrap"
+                       Text="No hay entradas con estos filtros." />
+            <TextBlock x:Name="StatusText" Classes="error" TextWrapping="Wrap" />
+        </StackPanel>
+        <Grid RowDefinitions="2*,Auto,*">
+            <DataGrid x:Name="Grid"
+                      AutoGenerateColumns="False"
+                      IsReadOnly="True"
+                      CanUserSortColumns="True"
+                      CanUserResizeColumns="True"
+                      SelectionChanged="OnSelectionChanged" />
+            <GridSplitter Grid.Row="1" Height="6" HorizontalAlignment="Stretch" />
+            <Border Grid.Row="2" Classes="panel" Padding="12" Margin="0,4,0,0">
+                <ScrollViewer>
+                    <StackPanel Spacing="6">
+                        <TextBlock FontWeight="SemiBold" Text="Detalle (antes → después)" />
+                        <TextBlock x:Name="DetailMeta" Classes="muted" TextWrapping="Wrap"
+                                   Text="Seleccione una fila para ver los cambios." />
+                        <Grid ColumnDefinitions="*,12,*">
+                            <StackPanel>
+                                <TextBlock FontWeight="SemiBold" Text="Antes" Margin="0,0,0,4" />
+                                <TextBlock x:Name="BeforeText" TextWrapping="Wrap" Text="—" />
+                            </StackPanel>
+                            <StackPanel Grid.Column="2">
+                                <TextBlock FontWeight="SemiBold" Text="Después" Margin="0,0,0,4" />
+                                <TextBlock x:Name="AfterText" TextWrapping="Wrap" Text="—" />
+                            </StackPanel>
+                        </Grid>
+                    </StackPanel>
+                </ScrollViewer>
+            </Border>
+        </Grid>
+    </DockPanel>
+</UserControl>

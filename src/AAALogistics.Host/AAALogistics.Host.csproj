@@ -1,0 +1,24 @@
+﻿<Project Sdk="Microsoft.NET.Sdk.Web">
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <RootNamespace>AAALogistics.Host</RootNamespace>
+    <AssemblyName>AAALogistics.Server</AssemblyName>
+  </PropertyGroup>
+  <ItemGroup>
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Design">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
+    <PackageReference Include="Scalar.AspNetCore" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Update="openapi\v1.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\AAALogistics.Api\AAALogistics.Api.csproj" />
+    <ProjectReference Include="..\AAALogistics.Infrastructure\AAALogistics.Infrastructure.csproj" />
+    <ProjectReference Include="..\AAALogistics.Integrations\AAALogistics.Integrations.csproj" />
+  </ItemGroup>
+</Project>

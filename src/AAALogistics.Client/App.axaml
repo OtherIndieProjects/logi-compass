@@ -1,0 +1,310 @@
+<Application xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             x:Class="AAALogistics.Client.App"
+             RequestedThemeVariant="Light">
+    <!-- AAA / Logi Compass OfficeUi: Fiori-inspired density & hierarchy (own brand, not SAP chrome clone). -->
+    <Application.Resources>
+        <SolidColorBrush x:Key="Lc.Primary" Color="#0854A0" />
+        <SolidColorBrush x:Key="Lc.PrimaryDark" Color="#354A5F" />
+        <SolidColorBrush x:Key="Lc.PrimaryLight" Color="#EBF5FE" />
+        <SolidColorBrush x:Key="Lc.Secondary" Color="#5B738B" />
+        <SolidColorBrush x:Key="Lc.Accent" Color="#0A6ED1" />
+        <SolidColorBrush x:Key="Lc.Surface" Color="#FFFFFF" />
+        <SolidColorBrush x:Key="Lc.Background" Color="#F5F6F7" />
+        <SolidColorBrush x:Key="Lc.Border" Color="#D9D9D9" />
+        <SolidColorBrush x:Key="Lc.Text" Color="#32363A" />
+        <SolidColorBrush x:Key="Lc.TextSecondary" Color="#6A6D70" />
+        <SolidColorBrush x:Key="Lc.Error" Color="#BB0000" />
+        <SolidColorBrush x:Key="Lc.Warning" Color="#E9730C" />
+        <SolidColorBrush x:Key="Lc.Success" Color="#107E3E" />
+        <SolidColorBrush x:Key="Lc.ShellHeader" Color="#2A3B4D" />
+        <SolidColorBrush x:Key="Lc.NavRail" Color="#FFFFFF" />
+        <SolidColorBrush x:Key="Lc.NavGroupBg" Color="#F0F2F4" />
+    </Application.Resources>
+    <Application.Styles>
+        <FluentTheme />
+        <StyleInclude Source="avares://Avalonia.Controls.DataGrid/Themes/Fluent.xaml" />
+
+        <Style Selector="Window">
+            <Setter Property="Background" Value="{DynamicResource Lc.Background}" />
+            <Setter Property="Foreground" Value="{DynamicResource Lc.Text}" />
+            <Setter Property="FontSize" Value="13" />
+            <Setter Property="FontFamily" Value="Segoe UI, sans-serif" />
+        </Style>
+        <Style Selector="TextBlock">
+            <Setter Property="Foreground" Value="{DynamicResource Lc.Text}" />
+        </Style>
+        <Style Selector="TextBlock.muted">
+            <Setter Property="Foreground" Value="{DynamicResource Lc.TextSecondary}" />
+            <Setter Property="FontSize" Value="12" />
+        </Style>
+        <Style Selector="TextBlock.error">
+            <Setter Property="Foreground" Value="{DynamicResource Lc.Error}" />
+        </Style>
+        <Style Selector="TextBlock.page-title">
+            <Setter Property="FontSize" Value="20" />
+            <Setter Property="FontWeight" Value="SemiBold" />
+            <Setter Property="Foreground" Value="{DynamicResource Lc.Text}" />
+        </Style>
+        <Style Selector="TextBlock.section-title">
+            <Setter Property="FontSize" Value="14" />
+            <Setter Property="FontWeight" Value="SemiBold" />
+            <Setter Property="Foreground" Value="{DynamicResource Lc.Text}" />
+            <Setter Property="Margin" Value="0,4,0,2" />
+        </Style>
+        <Style Selector="TextBlock.nav-group">
+            <Setter Property="FontSize" Value="10" />
+            <Setter Property="FontWeight" Value="Bold" />
+            <Setter Property="Foreground" Value="{DynamicResource Lc.Secondary}" />
+            <Setter Property="Background" Value="{DynamicResource Lc.NavGroupBg}" />
+            <Setter Property="Padding" Value="12,8,8,6" />
+            <Setter Property="Margin" Value="0,6,0,2" />
+        </Style>
+        <Style Selector="TextBlock.shell-brand">
+            <Setter Property="Foreground" Value="White" />
+            <Setter Property="FontSize" Value="16" />
+            <Setter Property="FontWeight" Value="Bold" />
+        </Style>
+        <Style Selector="TextBlock.shell-meta">
+            <Setter Property="Foreground" Value="#B8C2CC" />
+            <Setter Property="FontSize" Value="12" />
+        </Style>
+        <Style Selector="TextBlock.shell-status">
+            <Setter Property="Foreground" Value="#EBF5FE" />
+            <Setter Property="FontSize" Value="12" />
+        </Style>
+
+        <!-- Default toolbar button = secondary outline (hierarchy over flat Fluent). -->
+        <Style Selector="Button">
+            <Setter Property="Background" Value="{DynamicResource Lc.Surface}" />
+            <Setter Property="Foreground" Value="{DynamicResource Lc.Primary}" />
+            <Setter Property="BorderBrush" Value="{DynamicResource Lc.Primary}" />
+            <Setter Property="BorderThickness" Value="1" />
+            <Setter Property="Padding" Value="12,5" />
+            <Setter Property="MinHeight" Value="28" />
+            <Setter Property="CornerRadius" Value="0" />
+            <Setter Property="FontSize" Value="12" />
+            <Setter Property="FontWeight" Value="SemiBold" />
+        </Style>
+        <Style Selector="Button:pointerover /template/ ContentPresenter">
+            <Setter Property="Background" Value="{DynamicResource Lc.PrimaryLight}" />
+            <Setter Property="BorderBrush" Value="{DynamicResource Lc.Accent}" />
+        </Style>
+        <Style Selector="Button:disabled /template/ ContentPresenter">
+            <Setter Property="Opacity" Value="0.45" />
+        </Style>
+        <Style Selector="Button.primary">
+            <Setter Property="Background" Value="{DynamicResource Lc.Primary}" />
+            <Setter Property="Foreground" Value="White" />
+            <Setter Property="BorderBrush" Value="{DynamicResource Lc.Primary}" />
+            <Setter Property="BorderThickness" Value="1" />
+            <Setter Property="Padding" Value="14,6" />
+            <Setter Property="CornerRadius" Value="0" />
+            <Setter Property="FontWeight" Value="SemiBold" />
+        </Style>
+        <Style Selector="Button.primary:pointerover /template/ ContentPresenter">
+            <Setter Property="Background" Value="{DynamicResource Lc.Accent}" />
+            <Setter Property="BorderBrush" Value="{DynamicResource Lc.Accent}" />
+            <Setter Property="Foreground" Value="White" />
+        </Style>
+        <Style Selector="Button.secondary">
+            <Setter Property="Background" Value="{DynamicResource Lc.Surface}" />
+            <Setter Property="Foreground" Value="{DynamicResource Lc.Primary}" />
+            <Setter Property="BorderBrush" Value="{DynamicResource Lc.Primary}" />
+            <Setter Property="BorderThickness" Value="1" />
+            <Setter Property="Padding" Value="12,5" />
+            <Setter Property="CornerRadius" Value="0" />
+        </Style>
+        <Style Selector="Button.secondary:pointerover /template/ ContentPresenter">
+            <Setter Property="Background" Value="{DynamicResource Lc.PrimaryLight}" />
+        </Style>
+        <Style Selector="Button.ghost">
+            <Setter Property="Background" Value="Transparent" />
+            <Setter Property="Foreground" Value="White" />
+            <Setter Property="BorderBrush" Value="#6B7F93" />
+            <Setter Property="BorderThickness" Value="1" />
+            <Setter Property="Padding" Value="12,5" />
+            <Setter Property="CornerRadius" Value="0" />
+        </Style>
+        <Style Selector="Button.ghost:pointerover /template/ ContentPresenter">
+            <Setter Property="Background" Value="#3D5166" />
+            <Setter Property="BorderBrush" Value="#9AADC0" />
+            <Setter Property="Foreground" Value="White" />
+        </Style>
+        <Style Selector="Button.shell-primary">
+            <Setter Property="Background" Value="{DynamicResource Lc.Accent}" />
+            <Setter Property="Foreground" Value="White" />
+            <Setter Property="BorderBrush" Value="{DynamicResource Lc.Accent}" />
+            <Setter Property="BorderThickness" Value="1" />
+            <Setter Property="Padding" Value="14,6" />
+            <Setter Property="CornerRadius" Value="0" />
+            <Setter Property="FontWeight" Value="SemiBold" />
+        </Style>
+        <Style Selector="Button.shell-primary:pointerover /template/ ContentPresenter">
+            <Setter Property="Background" Value="#0B7FE0" />
+            <Setter Property="BorderBrush" Value="#0B7FE0" />
+            <Setter Property="Foreground" Value="White" />
+        </Style>
+        <Style Selector="Button.info-help">
+            <Setter Property="Width" Value="22" />
+            <Setter Property="Height" Value="22" />
+            <Setter Property="MinWidth" Value="22" />
+            <Setter Property="MinHeight" Value="22" />
+            <Setter Property="Padding" Value="0" />
+            <Setter Property="CornerRadius" Value="11" />
+            <Setter Property="FontSize" Value="12" />
+            <Setter Property="FontWeight" Value="SemiBold" />
+            <Setter Property="Background" Value="{DynamicResource Lc.PrimaryLight}" />
+            <Setter Property="Foreground" Value="{DynamicResource Lc.Primary}" />
+            <Setter Property="BorderBrush" Value="{DynamicResource Lc.Primary}" />
+            <Setter Property="BorderThickness" Value="1" />
+            <Setter Property="HorizontalContentAlignment" Value="Center" />
+            <Setter Property="VerticalContentAlignment" Value="Center" />
+            <Setter Property="VerticalAlignment" Value="Center" />
+        </Style>
+        <Style Selector="Button.info-help:pointerover /template/ ContentPresenter">
+            <Setter Property="Background" Value="#D3E8FA" />
+        </Style>
+        <Style Selector="Button.nav">
+            <Setter Property="HorizontalAlignment" Value="Stretch" />
+            <Setter Property="HorizontalContentAlignment" Value="Left" />
+            <Setter Property="Background" Value="Transparent" />
+            <Setter Property="Foreground" Value="{DynamicResource Lc.Text}" />
+            <Setter Property="FontWeight" Value="Normal" />
+            <Setter Property="FontSize" Value="13" />
+            <Setter Property="Padding" Value="14,8" />
+            <Setter Property="Margin" Value="0,0,0,0" />
+            <Setter Property="MinHeight" Value="32" />
+            <Setter Property="CornerRadius" Value="0" />
+            <Setter Property="BorderThickness" Value="0" />
+            <Setter Property="BorderBrush" Value="Transparent" />
+        </Style>
+        <Style Selector="Button.nav:pointerover /template/ ContentPresenter">
+            <Setter Property="Background" Value="{DynamicResource Lc.PrimaryLight}" />
+            <Setter Property="BorderBrush" Value="Transparent" />
+        </Style>
+        <Style Selector="Button.nav.selected">
+            <Setter Property="Background" Value="{DynamicResource Lc.PrimaryLight}" />
+            <Setter Property="Foreground" Value="{DynamicResource Lc.Primary}" />
+            <Setter Property="FontWeight" Value="SemiBold" />
+            <Setter Property="BorderBrush" Value="{DynamicResource Lc.Accent}" />
+            <Setter Property="BorderThickness" Value="3,0,0,0" />
+        </Style>
+        <Style Selector="Button.tile">
+            <Setter Property="Background" Value="{DynamicResource Lc.Surface}" />
+            <Setter Property="Foreground" Value="{DynamicResource Lc.Text}" />
+            <Setter Property="BorderBrush" Value="{DynamicResource Lc.Border}" />
+            <Setter Property="BorderThickness" Value="1" />
+            <Setter Property="CornerRadius" Value="0" />
+            <Setter Property="Padding" Value="0" />
+            <Setter Property="MinHeight" Value="108" />
+            <Setter Property="HorizontalContentAlignment" Value="Stretch" />
+            <Setter Property="VerticalContentAlignment" Value="Stretch" />
+            <Setter Property="FontWeight" Value="Normal" />
+            <Setter Property="Margin" Value="0,0,8,8" />
+        </Style>
+        <Style Selector="Button.tile:pointerover /template/ ContentPresenter">
+            <Setter Property="Background" Value="{DynamicResource Lc.PrimaryLight}" />
+            <Setter Property="BorderBrush" Value="{DynamicResource Lc.Accent}" />
+        </Style>
+
+        <Style Selector="Border.panel">
+            <Setter Property="Background" Value="{DynamicResource Lc.Surface}" />
+            <Setter Property="BorderBrush" Value="{DynamicResource Lc.Border}" />
+            <Setter Property="BorderThickness" Value="1" />
+            <Setter Property="CornerRadius" Value="0" />
+            <Setter Property="Padding" Value="12" />
+        </Style>
+        <Style Selector="Border.shell-header">
+            <Setter Property="Background" Value="{DynamicResource Lc.ShellHeader}" />
+            <Setter Property="Padding" Value="14,10" />
+        </Style>
+        <Style Selector="Border.shell-status">
+            <Setter Property="Background" Value="#223242" />
+            <Setter Property="Padding" Value="10,5" />
+            <Setter Property="BorderBrush" Value="#1A2733" />
+            <Setter Property="BorderThickness" Value="0,1,0,0" />
+        </Style>
+        <Style Selector="Border.nav-rail">
+            <Setter Property="Background" Value="{DynamicResource Lc.NavRail}" />
+            <Setter Property="BorderBrush" Value="{DynamicResource Lc.Border}" />
+            <Setter Property="BorderThickness" Value="0,0,1,0" />
+            <Setter Property="Padding" Value="0,4,0,8" />
+        </Style>
+        <Style Selector="Border.message-strip">
+            <Setter Property="Background" Value="{DynamicResource Lc.PrimaryLight}" />
+            <Setter Property="BorderBrush" Value="{DynamicResource Lc.Primary}" />
+            <Setter Property="BorderThickness" Value="3,0,0,0" />
+            <Setter Property="Padding" Value="10,8" />
+            <Setter Property="Margin" Value="0,0,0,8" />
+        </Style>
+        <Style Selector="Border.chart-panel">
+            <Setter Property="Background" Value="{DynamicResource Lc.Surface}" />
+            <Setter Property="BorderBrush" Value="{DynamicResource Lc.Border}" />
+            <Setter Property="BorderThickness" Value="1" />
+            <Setter Property="CornerRadius" Value="0" />
+            <Setter Property="Padding" Value="12" />
+            <Setter Property="Margin" Value="0,0,8,8" />
+        </Style>
+        <Style Selector="Border.kpi">
+            <Setter Property="Background" Value="{DynamicResource Lc.Surface}" />
+            <Setter Property="BorderBrush" Value="{DynamicResource Lc.Border}" />
+            <Setter Property="BorderThickness" Value="1" />
+            <Setter Property="CornerRadius" Value="0" />
+            <Setter Property="Padding" Value="12" />
+            <Setter Property="Margin" Value="0,0,8,8" />
+        </Style>
+        <Style Selector="Border.tile-accent">
+            <Setter Property="Height" Value="4" />
+            <Setter Property="HorizontalAlignment" Value="Stretch" />
+            <Setter Property="Background" Value="{DynamicResource Lc.Accent}" />
+        </Style>
+        <Style Selector="Border.tile-accent.warning">
+            <Setter Property="Background" Value="{DynamicResource Lc.Warning}" />
+        </Style>
+        <Style Selector="Border.tile-accent.success">
+            <Setter Property="Background" Value="{DynamicResource Lc.Success}" />
+        </Style>
+        <Style Selector="Border.tile-accent.secondary">
+            <Setter Property="Background" Value="{DynamicResource Lc.Secondary}" />
+        </Style>
+        <Style Selector="Border.action-bar">
+            <Setter Property="Background" Value="{DynamicResource Lc.Surface}" />
+            <Setter Property="BorderBrush" Value="{DynamicResource Lc.Border}" />
+            <Setter Property="BorderThickness" Value="1" />
+            <Setter Property="Padding" Value="8" />
+            <Setter Property="Margin" Value="0,0,0,8" />
+        </Style>
+
+        <Style Selector="DataGrid">
+            <Setter Property="GridLinesVisibility" Value="Horizontal" />
+            <Setter Property="BorderBrush" Value="{DynamicResource Lc.Border}" />
+            <Setter Property="BorderThickness" Value="1" />
+            <Setter Property="Background" Value="{DynamicResource Lc.Surface}" />
+            <Setter Property="Foreground" Value="{DynamicResource Lc.Text}" />
+            <Setter Property="RowHeight" Value="26" />
+            <Setter Property="IsReadOnly" Value="True" />
+            <Setter Property="CanUserResizeColumns" Value="True" />
+            <Setter Property="CanUserSortColumns" Value="True" />
+            <Setter Property="FontSize" Value="12" />
+        </Style>
+        <Style Selector="DataGridColumnHeader">
+            <Setter Property="FontWeight" Value="SemiBold" />
+            <Setter Property="FontSize" Value="11" />
+            <Setter Property="Foreground" Value="{DynamicResource Lc.Secondary}" />
+            <Setter Property="Background" Value="{DynamicResource Lc.NavGroupBg}" />
+            <Setter Property="Padding" Value="8,4" />
+        </Style>
+        <Style Selector="TextBox">
+            <Setter Property="Padding" Value="6,4" />
+            <Setter Property="MinHeight" Value="28" />
+            <Setter Property="CornerRadius" Value="0" />
+            <Setter Property="BorderBrush" Value="{DynamicResource Lc.Border}" />
+        </Style>
+        <Style Selector="ComboBox">
+            <Setter Property="MinHeight" Value="28" />
+            <Setter Property="Padding" Value="6,2" />
+            <Setter Property="CornerRadius" Value="0" />
+        </Style>
+    </Application.Styles>
+</Application>

@@ -1,0 +1,119 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             x:Class="AAALogistics.Client.Views.WarehousesView">
+    <DockPanel>
+        <StackPanel DockPanel.Dock="Top" Spacing="8" Margin="0,0,0,8">
+            <StackPanel x:Name="TitleRow" Orientation="Horizontal" Spacing="8">
+                <TextBlock Classes="page-title" Text="Ubicaciones de almacén" VerticalAlignment="Center" />
+            </StackPanel>
+            <TextBlock Classes="muted"
+                       Text="Estructura física: zona → pasillo → columna → fila → posición → altura → hueco. Elija almacén, cree nodos con padre explícito (o raíz) y mueva stock con colocación en hueco o traspaso."
+                       TextWrapping="Wrap" />
+            <Border Classes="panel">
+                <StackPanel Spacing="8">
+                    <StackPanel Orientation="Horizontal" Spacing="8">
+                        <TextBlock FontWeight="SemiBold" Text="Almacenes" VerticalAlignment="Center" />
+                        <Button x:Name="NewWarehouseButton" Classes="primary" Content="Nuevo almacén"
+                                Click="OnNewWarehouseClick"
+                                ToolTip.Tip="Crea un almacén y su raíz (código = código del almacén)." />
+                        <Button x:Name="DeleteWarehouseButton" Classes="secondary" Content="Eliminar almacén"
+                                Click="OnDeleteWarehouseClick"
+                                ToolTip.Tip="Borra el almacén solo si no tiene zonas/huecos, stock ni historial. Requiere permiso de maestros." />
+                    </StackPanel>
+                </StackPanel>
+            </Border>
+            <Border Classes="panel">
+                <StackPanel Spacing="8">
+                    <StackPanel Orientation="Horizontal" Spacing="8">
+                        <TextBlock FontWeight="SemiBold" Text="Nueva ubicación" VerticalAlignment="Center" />
+                        <ContentControl x:Name="DefaultHelpHost" VerticalAlignment="Center" />
+                    </StackPanel>
+                    <StackPanel Orientation="Horizontal" Spacing="8">
+                        <StackPanel Spacing="2">
+                            <TextBlock Classes="muted" Text="Almacén" />
+                            <ComboBox x:Name="WarehouseBox" Width="200" />
+                        </StackPanel>
+                        <StackPanel Spacing="2">
+                            <StackPanel Orientation="Horizontal" Spacing="4">
+                                <TextBlock Classes="muted" Text="Ubicación padre" VerticalAlignment="Center" />
+                                <ContentControl x:Name="ParentHelpHost" VerticalAlignment="Center" />
+                            </StackPanel>
+                            <ComboBox x:Name="ParentBox" Width="220" />
+                        </StackPanel>
+                        <StackPanel Spacing="2">
+                            <TextBlock Classes="muted" Text="Código" />
+                            <TextBox x:Name="CodeBox" Width="100" />
+                        </StackPanel>
+                        <StackPanel Spacing="2">
+                            <TextBlock Classes="muted" Text="Nombre" />
+                            <TextBox x:Name="NameBox" Width="160" />
+                        </StackPanel>
+                        <StackPanel Spacing="2">
+                            <StackPanel Orientation="Horizontal" Spacing="4">
+                                <TextBlock Classes="muted" Text="Tipo" VerticalAlignment="Center" />
+                                <ContentControl x:Name="KindHelpHost" VerticalAlignment="Center" />
+                            </StackPanel>
+                            <ComboBox x:Name="KindBox" Width="120" SelectedIndex="0">
+                                <ComboBoxItem Content="Zona" Tag="Zone" />
+                                <ComboBoxItem Content="Pasillo" Tag="Aisle" />
+                                <ComboBoxItem Content="Columna" Tag="Column" />
+                                <ComboBoxItem Content="Fila" Tag="Row" />
+                                <ComboBoxItem Content="Posición" Tag="Position" />
+                                <ComboBoxItem Content="Altura" Tag="Height" />
+                                <ComboBoxItem Content="Hueco" Tag="Bin" />
+                            </ComboBox>
+                        </StackPanel>
+                        <Button Classes="primary" Content="Actualizar" VerticalAlignment="Bottom" Click="OnRefreshClick" />
+                        <Button x:Name="CreateLocationButton" Classes="primary" Content="Crear ubicación"
+                                VerticalAlignment="Bottom" Click="OnCreateClick" />
+                        <Button x:Name="EditLocationButton" Classes="secondary" Content="Editar…"
+                                VerticalAlignment="Bottom" Click="OnEditClick" />
+                        <Button x:Name="ToggleLocationButton" Classes="secondary" Content="Desactivar"
+                                VerticalAlignment="Bottom" Click="OnToggleActiveClick"
+                                ToolTip.Tip="Desactiva o reactiva la ubicación (PUT). No borra historial." />
+                        <Button x:Name="DeleteLocationButton" Classes="secondary" Content="Eliminar"
+                                VerticalAlignment="Bottom" Click="OnDeleteClick"
+                                ToolTip.Tip="Borra la ubicación solo si no tiene stock, hijas ni historial. Si no, use Desactivar." />
+                    </StackPanel>
+                </StackPanel>
+            </Border>
+            <Border Classes="panel">
+                <StackPanel Spacing="8">
+                    <TextBlock FontWeight="SemiBold" Text="Movimiento a ubicación seleccionada" />
+                    <StackPanel Orientation="Horizontal" Spacing="8">
+                        <StackPanel Spacing="2">
+                            <TextBlock Classes="muted" Text="Material" />
+                            <ComboBox x:Name="MaterialBox" Width="220" />
+                        </StackPanel>
+                        <StackPanel Spacing="2">
+                            <TextBlock Classes="muted" Text="Cantidad" />
+                            <TextBox x:Name="TransferQtyBox" Width="80" Text="1" />
+                        </StackPanel>
+                        <StackPanel Spacing="2">
+                            <TextBlock Classes="muted" Text="Lote (opcional)" />
+                            <ComboBox x:Name="PutawayLotBox" Width="220" PlaceholderText="Sin lote" />
+                        </StackPanel>
+                        <Button x:Name="LocationTransferButton" Content="Traspasar desde padre"
+                                VerticalAlignment="Bottom" Click="OnTransferClick"
+                                ToolTip.Tip="Mueve stock de la ubicación padre a la hija seleccionada" />
+                        <ContentControl x:Name="LocationTransferHelpHost" VerticalAlignment="Center" />
+                        <Button x:Name="PutawayButton" Content="Colocar en hueco (raíz → seleccionada)"
+                                VerticalAlignment="Bottom" Click="OnPutawayClick"
+                                ToolTip.Tip="Coloca stock desde la raíz del almacén hacia el hueco seleccionado" />
+                        <ContentControl x:Name="PutawayHelpHost" VerticalAlignment="Center" />
+                    </StackPanel>
+                </StackPanel>
+            </Border>
+            <TextBlock x:Name="StatusText" Classes="error" TextWrapping="Wrap" />
+            <TextBlock x:Name="EmptyHint" Classes="muted" IsVisible="False" TextWrapping="Wrap"
+                       Text="Crea el primer almacén…" />
+        </StackPanel>
+        <Grid ColumnDefinitions="*,2*">
+            <DataGrid x:Name="WarehousesGrid" AutoGenerateColumns="False"
+                      SelectionChanged="OnWarehouseSelected" />
+            <DataGrid x:Name="LocationsGrid" Grid.Column="1" Margin="8,0,0,0"
+                      AutoGenerateColumns="False"
+                      SelectionChanged="OnLocationSelected" />
+        </Grid>
+    </DockPanel>
+</UserControl>

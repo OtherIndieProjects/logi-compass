@@ -1,0 +1,257 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:controls="clr-namespace:AAALogistics.Client.Controls"
+             x:Class="AAALogistics.Client.Views.HomeView">
+    <ScrollViewer>
+        <StackPanel Spacing="12">
+            <StackPanel x:Name="TitleRow" Orientation="Horizontal" Spacing="8">
+                <TextBlock Classes="page-title" Text="Inicio · bandeja de oficina" VerticalAlignment="Center" />
+            </StackPanel>
+            <TextBlock x:Name="IdentityText" Classes="muted" TextWrapping="Wrap" />
+            <TextBlock x:Name="RbacHintText" Classes="muted" TextWrapping="Wrap"
+                       Text="Si no ve un menú a la izquierda, faltan rangos en su cuenta: pida a un administrador que se los asigne en SISTEMA → Cuentas." />
+
+            <Border Classes="action-bar">
+                <StackPanel Orientation="Horizontal" Spacing="8">
+                    <Button Classes="primary" Content="Actualizar" Click="OnRefreshClick"
+                            ToolTip.Tip="Actualizar pendientes" />
+                    <TextBlock x:Name="BadgeText" FontWeight="SemiBold" VerticalAlignment="Center" />
+                </StackPanel>
+            </Border>
+
+            <TextBlock Classes="section-title" Text="Accesos rápidos" />
+            <UniformGrid Columns="5" x:Name="QuickTiles">
+                <Button x:Name="TileCatalog" Classes="tile" Click="OnGoCatalog" ToolTip.Tip="Materiales, proveedores…">
+                    <StackPanel>
+                        <Border Classes="tile-accent" />
+                        <StackPanel Margin="12,10" Spacing="4">
+                            <TextBlock FontSize="20" FontWeight="Bold" Foreground="#0854A0" Text="M" />
+                            <TextBlock FontWeight="SemiBold" Text="Maestros" />
+                            <TextBlock Classes="muted" Text="Materiales y partners" />
+                        </StackPanel>
+                    </StackPanel>
+                </Button>
+                <Button x:Name="TileWarehouses" Classes="tile" Click="OnGoWarehouses">
+                    <StackPanel>
+                        <Border Classes="tile-accent secondary" />
+                        <StackPanel Margin="12,10" Spacing="4">
+                            <TextBlock FontSize="20" FontWeight="Bold" Foreground="#5B738B" Text="U" />
+                            <TextBlock FontWeight="SemiBold" Text="Ubicaciones" />
+                            <TextBlock Classes="muted" Text="Estructura de almacén" />
+                        </StackPanel>
+                    </StackPanel>
+                </Button>
+                <Button x:Name="TilePurchases" Classes="tile" Click="OnGoPurchases">
+                    <StackPanel>
+                        <Border Classes="tile-accent" />
+                        <StackPanel Margin="12,10" Spacing="4">
+                            <TextBlock FontSize="20" FontWeight="Bold" Foreground="#0854A0" Text="C" />
+                            <TextBlock FontWeight="SemiBold" Text="Compras" />
+                            <TextBlock Classes="muted" Text="Pedidos y recepción" />
+                        </StackPanel>
+                    </StackPanel>
+                </Button>
+                <Button x:Name="TileSales" Classes="tile" Click="OnGoSales" ToolTip.Tip="Pedidos de venta y entrega (DN/PGI)">
+                    <StackPanel>
+                        <Border Classes="tile-accent success" />
+                        <StackPanel Margin="12,10" Spacing="4">
+                            <TextBlock FontSize="20" FontWeight="Bold" Foreground="#107E3E" Text="V" />
+                            <TextBlock FontWeight="SemiBold" Text="Ventas" />
+                            <TextBlock Classes="muted" Text="Pedido · DN/PGI" />
+                        </StackPanel>
+                    </StackPanel>
+                </Button>
+                <Button x:Name="TileQuotes" Classes="tile" Click="OnGoQuotes"
+                        ToolTip.Tip="Ofertas al cliente; aceptar crea pedido de venta">
+                    <StackPanel>
+                        <Border Classes="tile-accent" />
+                        <StackPanel Margin="12,10" Spacing="4">
+                            <TextBlock FontSize="20" FontWeight="Bold" Foreground="#0A6ED1" Text="Q" />
+                            <TextBlock FontWeight="SemiBold" Text="Presupuestos" />
+                            <TextBlock Classes="muted" Text="Quote → pedido" />
+                        </StackPanel>
+                    </StackPanel>
+                </Button>
+                <Button x:Name="TileBilling" Classes="tile" Click="OnGoBilling">
+                    <StackPanel>
+                        <Border Classes="tile-accent secondary" />
+                        <StackPanel Margin="12,10" Spacing="4">
+                            <TextBlock FontSize="20" FontWeight="Bold" Foreground="#5B738B" Text="F" />
+                            <TextBlock FontWeight="SemiBold" Text="Facturas" />
+                            <TextBlock Classes="muted" Text="Emisión fiscal" />
+                        </StackPanel>
+                    </StackPanel>
+                </Button>
+                <Button x:Name="TileInventory" Classes="tile" Click="OnGoInventory" ToolTip.Tip="Stock e IM">
+                    <StackPanel>
+                        <Border Classes="tile-accent warning" />
+                        <StackPanel Margin="12,10" Spacing="4">
+                            <TextBlock FontSize="20" FontWeight="Bold" Foreground="#E9730C" Text="I" />
+                            <TextBlock FontWeight="SemiBold" Text="Inventario" />
+                            <TextBlock Classes="muted" Text="Stock e IM" />
+                        </StackPanel>
+                    </StackPanel>
+                </Button>
+                <Button x:Name="TilePrep" Classes="tile" Click="OnGoPrep"
+                        ToolTip.Tip="ALMACÉN · cola de picking de oficina">
+                    <StackPanel>
+                        <Border Classes="tile-accent" />
+                        <StackPanel Margin="12,10" Spacing="4">
+                            <TextBlock FontSize="20" FontWeight="Bold" Foreground="#0A6ED1" Text="P" />
+                            <TextBlock FontWeight="SemiBold" Text="Preparación" />
+                            <TextBlock Classes="muted" Text="Cola de picking" />
+                        </StackPanel>
+                    </StackPanel>
+                </Button>
+                <Button x:Name="TileOffice" Classes="tile" Click="OnGoOffice">
+                    <StackPanel>
+                        <Border Classes="tile-accent secondary" />
+                        <StackPanel Margin="12,10" Spacing="4">
+                            <TextBlock FontSize="20" FontWeight="Bold" Foreground="#5B738B" Text="O" />
+                            <TextBlock FontWeight="SemiBold" Text="Oficina / CMR" />
+                            <TextBlock Classes="muted" Text="Cierre y transporte" />
+                        </StackPanel>
+                    </StackPanel>
+                </Button>
+                <Button x:Name="TileReports" Classes="tile" Click="OnGoReports">
+                    <StackPanel>
+                        <Border Classes="tile-accent" />
+                        <StackPanel Margin="12,10" Spacing="4">
+                            <TextBlock FontSize="20" FontWeight="Bold" Foreground="#0854A0" Text="R" />
+                            <TextBlock FontWeight="SemiBold" Text="Informes" />
+                            <TextBlock Classes="muted" Text="OTIF y pedidos" />
+                        </StackPanel>
+                    </StackPanel>
+                </Button>
+                <Button x:Name="TileAudit" Classes="tile" Click="OnGoAudit">
+                    <StackPanel>
+                        <Border Classes="tile-accent secondary" />
+                        <StackPanel Margin="12,10" Spacing="4">
+                            <TextBlock FontSize="20" FontWeight="Bold" Foreground="#5B738B" Text="Au" />
+                            <TextBlock FontWeight="SemiBold" Text="Auditoría" />
+                            <TextBlock Classes="muted" Text="Pista y cadena" />
+                        </StackPanel>
+                    </StackPanel>
+                </Button>
+                <Button x:Name="TileAccounts" Classes="tile" Click="OnGoAccounts">
+                    <StackPanel>
+                        <Border Classes="tile-accent" />
+                        <StackPanel Margin="12,10" Spacing="4">
+                            <TextBlock FontSize="20" FontWeight="Bold" Foreground="#0854A0" Text="A" />
+                            <TextBlock FontWeight="SemiBold" Text="Cuentas" />
+                            <TextBlock Classes="muted" Text="Usuarios y rangos" />
+                        </StackPanel>
+                    </StackPanel>
+                </Button>
+                <Button x:Name="TileRegistration" Classes="tile" Click="OnGoRegistration">
+                    <StackPanel>
+                        <Border Classes="tile-accent warning" />
+                        <StackPanel Margin="12,10" Spacing="4">
+                            <TextBlock FontSize="20" FontWeight="Bold" Foreground="#E9730C" Text="Reg" />
+                            <TextBlock FontWeight="SemiBold" Text="Registro" />
+                            <TextBlock Classes="muted" Text="Solicitudes portal" />
+                        </StackPanel>
+                    </StackPanel>
+                </Button>
+            </UniformGrid>
+
+            <TextBlock Classes="section-title" Text="Indicadores" />
+            <UniformGrid Columns="3" Margin="0,0,0,4">
+                <Border Classes="kpi" x:Name="CardPrep">
+                    <StackPanel Spacing="4">
+                        <TextBlock Classes="muted" Text="Preparación (almacén)" />
+                        <TextBlock x:Name="CountPrep" FontSize="26" FontWeight="Bold" Foreground="#0A6ED1" Text="0" />
+                        <Button Classes="secondary" Content="Ver cola" HorizontalAlignment="Left" Click="OnGoPrep"
+                                ToolTip.Tip="Abre ALMACÉN → Preparación" />
+                    </StackPanel>
+                </Border>
+                <Border Classes="kpi" x:Name="CardOffice">
+                    <StackPanel Spacing="4">
+                        <TextBlock Classes="muted" Text="Cierre oficina / bajas" />
+                        <TextBlock x:Name="CountOffice" FontSize="26" FontWeight="Bold" Foreground="#5B738B" Text="0" />
+                        <Button Classes="secondary" Content="Ir a oficina" HorizontalAlignment="Left" Click="OnGoOffice" />
+                    </StackPanel>
+                </Border>
+                <Border Classes="kpi" x:Name="CardStock" Margin="0,0,0,8">
+                    <StackPanel Spacing="4">
+                        <TextBlock Classes="muted" Text="Stock bajo mínimo" />
+                        <TextBlock x:Name="CountStock" FontSize="26" FontWeight="Bold" Foreground="#E9730C" Text="0" />
+                        <Button Classes="secondary" Content="Abrir inventario" HorizontalAlignment="Left" Click="OnGoInventory" />
+                    </StackPanel>
+                </Border>
+            </UniformGrid>
+
+            <TextBlock Classes="section-title" Text="Gráficos operativos" />
+            <UniformGrid Columns="3">
+                <Border Classes="chart-panel" x:Name="ChartPrepPanel">
+                    <StackPanel Spacing="6">
+                        <TextBlock FontWeight="SemiBold" Text="Cola preparación" />
+                        <TextBlock Classes="muted" Text="Confirmado vs En preparación" />
+                        <controls:SimpleBarChart x:Name="PrepChart" />
+                    </StackPanel>
+                </Border>
+                <Border Classes="chart-panel" x:Name="ChartStockPanel">
+                    <StackPanel Spacing="6">
+                        <TextBlock FontWeight="SemiBold" Text="Stock bajo mínimo" />
+                        <TextBlock Classes="muted" Text="Materiales con mayor déficit" />
+                        <controls:SimpleBarChart x:Name="StockChart" />
+                    </StackPanel>
+                </Border>
+                <Border Classes="chart-panel" x:Name="ChartOrdersPanel" Margin="0,0,0,8">
+                    <StackPanel Spacing="6">
+                        <TextBlock FontWeight="SemiBold" Text="Pedidos abiertos" />
+                        <TextBlock Classes="muted" Text="Por estado operativo" />
+                        <controls:SimpleBarChart x:Name="OrdersChart" />
+                    </StackPanel>
+                </Border>
+            </UniformGrid>
+
+            <Border Classes="panel" x:Name="PrepPanel">
+                <StackPanel Spacing="8">
+                    <TextBlock FontWeight="SemiBold"
+                               Text="Cola almacén · preparación (Confirmado / En preparación)" />
+                    <DataGrid x:Name="PrepGrid" Height="140" AutoGenerateColumns="False" />
+                    <TextBlock x:Name="PrepEmpty" Classes="muted" IsVisible="False"
+                               Text="No hay pedidos en cola de preparación. Confirme un pedido en Ventas." />
+                </StackPanel>
+            </Border>
+            <Border Classes="panel" x:Name="OfficePanel">
+                <StackPanel Spacing="8">
+                    <TextBlock FontWeight="SemiBold" Text="Pendiente cierre oficina (Preparado)" />
+                    <DataGrid x:Name="OfficeGrid" Height="140" AutoGenerateColumns="False" />
+                    <TextBlock x:Name="OfficeEmpty" Classes="muted" IsVisible="False"
+                               Text="No hay pedidos preparados pendientes de cierre." />
+                </StackPanel>
+            </Border>
+            <Border Classes="panel" x:Name="BelowPanel">
+                <StackPanel Spacing="8">
+                    <TextBlock FontWeight="SemiBold" Text="Stock bajo mínimo" />
+                    <DataGrid x:Name="BelowMinGrid" Height="140" AutoGenerateColumns="False" />
+                    <TextBlock x:Name="BelowEmpty" Classes="muted" IsVisible="False"
+                               Text="Ningún material bajo el mínimo." />
+                </StackPanel>
+            </Border>
+            <Border Classes="panel" x:Name="RegistrationPanel">
+                <StackPanel Spacing="8">
+                    <TextBlock FontWeight="SemiBold" Text="Solicitudes de registro pendientes" />
+                    <DataGrid x:Name="RegistrationGrid" Height="140" AutoGenerateColumns="False" />
+                    <Button Classes="secondary" Content="Abrir registro" HorizontalAlignment="Left" Click="OnGoRegistration" />
+                </StackPanel>
+            </Border>
+            <Border Classes="panel" x:Name="DeletionPanel">
+                <StackPanel Spacing="8">
+                    <TextBlock FontWeight="SemiBold" Text="Bajas de material pendientes (cuatro ojos)" />
+                    <DataGrid x:Name="DeletionGrid" Height="140" AutoGenerateColumns="False" />
+                    <Button Classes="secondary" Content="Abrir oficina (aprobar bajas)" HorizontalAlignment="Left" Click="OnGoOffice" />
+                </StackPanel>
+            </Border>
+            <Border Classes="panel" x:Name="OrdersPanel">
+                <StackPanel Spacing="8">
+                    <TextBlock FontWeight="SemiBold" Text="Pedidos de venta recientes" />
+                    <DataGrid x:Name="OrdersGrid" Height="140" AutoGenerateColumns="False" />
+                </StackPanel>
+            </Border>
+            <TextBlock x:Name="StatusText" Classes="error" TextWrapping="Wrap" />
+        </StackPanel>
+    </ScrollViewer>
+</UserControl>

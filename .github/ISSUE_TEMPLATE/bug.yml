@@ -1,0 +1,48 @@
+name: Error / bug
+description: Algo no funciona como debería
+title: "[bug] "
+labels: ["bug"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Gracias. Describe el fallo con pasos reproducibles.
+        **No** publiques contraseñas, datos reales de clientes ni secretos.
+  - type: textarea
+    id: steps
+    attributes:
+      label: Pasos para reproducir
+      placeholder: |
+        1. …
+        2. …
+        3. …
+    validations:
+      required: true
+  - type: textarea
+    id: expected
+    attributes:
+      label: Resultado esperado
+    validations:
+      required: true
+  - type: textarea
+    id: actual
+    attributes:
+      label: Resultado actual
+    validations:
+      required: true
+  - type: input
+    id: version
+    attributes:
+      label: Versión o commit
+      placeholder: "1.2.0 o sha"
+  - type: dropdown
+    id: piece
+    attributes:
+      label: Pieza afectada
+      options:
+        - Cliente (Avalonia)
+        - Servidor / API
+        - Portal
+        - Documentación
+        - Despliegue / Docker
+        - Otro

@@ -1,0 +1,220 @@
+@page "/pedidos"
+@rendermode InteractiveServer
+@using System.Globalization
+@using AAALogistics.Contracts
+@using AAALogistics.Portal.Services
+@inject PortalApiClient Api
+@inject PortalSession Session
+
+<PageTitle>Mis pedidos</PageTitle>
+
+<h1>Mis pedidos</h1>
+<p>Solicite un pedido y consulte el estado de los existentes.</p>
+
+@if (!string.IsNullOrEmpty(_error))
+{
+    <p class="form-error">@_error</p>
+}
+
+@if (Session.IsAuthenticated && Session.AccessToken is not null)
+{
+    <section class="panel">
+        <h2>Solicitar pedido</h2>
+        @if (!string.IsNullOrEmpty(_formMessage))
+        {
+            <p>@_formMessage</p>
+        }
+        <div class="form-row">
+            <label>Almacén
+                <select @bind="_warehouseId">
+                    @foreach (var warehouse in _warehouses)
+                    {
+                        <option value="@warehouse.Id">@warehouse.Code — @warehouse.Name</option>
+                    }
+                </select>
+            </label>
+            <label>Material
+                <select @bind="_materialId">
+                    @foreach (var item in _catalog)
+                    {
+                        <option value="@item.Id">@item.Code — @item.Description</option>
+                    }
+                </select>
+            </label>
+            <label>Cantidad
+                <input type="number" step="0.001" min="0.001" @bind="_quantity" />
+            </label>
+            <button type="button" disabled="@_busy" @onclick="SubmitOrderAsync">Enviar solicitud</button>
+            <button type="button" disabled="@_busy" @onclick="RefreshAtpAsync">Consultar ATP</button>
+        </div>
+        @if (_atp is not null)
+        {
+            <p class="hint">ATP informativo: @_atp.AvailableQuantity.ToString("N3", Culture) (no garantiza plazo).</p>
+        }
+    </section>
+}
+
+@if (_orders is null)
+{
+    <p>Cargando…</p>
+}
+else if (_orders.Count == 0)
+{
+    <p>No hay pedidos. Use el formulario superior tras iniciar sesión.</p>
+}
+else
+{
+    <table class="data">
+        <thead>
+            <tr>
+                <th>Número</th>
+                <th>Estado</th>
+                <th>Líneas</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var order in _orders)
+            {
+                <tr>
+                    <td>@order.Number</td>
+                    <td>@order.Status</td>
+                    <td>@order.Lines.Count</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+
+@code {
+    private static readonly CultureInfo Culture = CultureInfo.GetCultureInfo("es-ES");
+
+    private IReadOnlyList<PortalSalesOrderRow>? _orders;
+    private IReadOnlyList<PortalWarehouseResponse> _warehouses = [];
+    private IReadOnlyList<PortalCatalogItemResponse> _catalog = [];
+    private string? _error;
+    private string? _formMessage;
+    private Guid _warehouseId;
+    private Guid _materialId;
+    private decimal _quantity = 1m;
+    private bool _busy;
+    private PortalAtpResponse? _atp;
+
+    protected override async Task OnInitializedAsync() => await LoadAsync();
+
+    private async Task LoadAsync()
+    {
+        try
+        {
+            if (!Session.IsAuthenticated || Session.AccessToken is null)
+            {
+                _error = "Inicie sesión para ver y solicitar pedidos.";
+                _orders = [];
+                return;
+            }
+
+            var token = Session.AccessToken;
+            _warehouses = await Api.GetWarehousesAsync(token);
+            _catalog = await Api.GetCatalogAsync(token);
+            _orders = await Api.GetSalesOrdersAsync(token);
+            if (_warehouseId == Guid.Empty && _warehouses.Count > 0)
+            {
+                _warehouseId = _warehouses[0].Id;
+            }
+
+            if (_materialId == Guid.Empty && _catalog.Count > 0)
+            {
+                _materialId = _catalog[0].Id;
+            }
+        }
+        catch (Exception exception) when (exception is PortalApiException
+            or HttpRequestException
+            or TaskCanceledException)
+        {
+            _error = exception.Message;
+        }
+    }
+
+    private async Task RefreshAtpAsync()
+    {
+        _atp = null;
+        _error = null;
+        if (!Session.IsAuthenticated || Session.AccessToken is null)
+        {
+            _error = "Sesión no válida.";
+            return;
+        }
+
+        if (_warehouseId == Guid.Empty || _materialId == Guid.Empty)
+        {
+            _formMessage = "Indique almacén y material para consultar ATP.";
+            return;
+        }
+
+        try
+        {
+            _atp = await Api.GetAtpAsync(
+                Session.AccessToken,
+                _materialId,
+                _warehouseId);
+        }
+        catch (Exception exception) when (exception is PortalApiException
+            or HttpRequestException
+            or TaskCanceledException)
+        {
+            _error = exception.Message;
+        }
+    }
+
+    private async Task SubmitOrderAsync()
+    {
+        _formMessage = null;
+        _error = null;
+        if (!Session.IsAuthenticated || Session.AccessToken is null)
+        {
+            _error = "Sesión no válida.";
+            return;
+        }
+
+        if (_warehouseId == Guid.Empty || _materialId == Guid.Empty || _quantity <= 0)
+        {
+            _formMessage = "Indique almacén, material y cantidad.";
+            return;
+        }
+
+        // CustomerId comes from JWT on the server; client must send matching claim value.
+        // Decode is not available here — use a sentinel replaced by server? API requires match.
+        // Portal login response should expose customer id; fall back to reading from a soft claim store.
+        var customerId = Session.CustomerId;
+        if (customerId is null)
+        {
+            _error = "Reinicie sesión: falta el identificador de cliente.";
+            return;
+        }
+
+        _busy = true;
+        try
+        {
+            await Api.CreateSalesOrderAsync(
+                Session.AccessToken,
+                new CreateSalesOrderRequest(
+                    customerId.Value,
+                    _warehouseId,
+                    DateOnly.FromDateTime(DateTime.Today.AddDays(7)),
+                    "EUR",
+                    null,
+                    [new CreateSalesOrderLineRequest(_materialId, _quantity)]));
+            _formMessage = "Pedido solicitado.";
+            _orders = await Api.GetSalesOrdersAsync(Session.AccessToken);
+        }
+        catch (Exception exception) when (exception is PortalApiException
+            or HttpRequestException
+            or TaskCanceledException)
+        {
+            _error = exception.Message;
+        }
+        finally
+        {
+            _busy = false;
+        }
+    }
+}

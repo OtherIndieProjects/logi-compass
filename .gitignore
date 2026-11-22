@@ -1,0 +1,116 @@
+# ---------------------------------------------------------------
+# Build output
+[Bb]in/
+[Oo]bj/
+[Dd]ebug/
+[Rr]elease/
+x64/
+x86/
+[Aa][Rr][Mm]64/
+[Ll]og/
+[Ll]ogs/
+artifacts/
+publish/
+out/
+*.nupkg
+*.snupkg
+.nuget/packages/
+
+# IDE / editor
+.vs/
+.vscode/*
+!.vscode/settings.json
+!.vscode/tasks.json
+!.vscode/launch.json
+!.vscode/extensions.json
+.idea/
+*.sln.iml
+*.user
+*.userosscache
+*.suo
+*.userprefs
+*.rsuser
+*.swp
+*~
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Tests and coverage
+[Tt]est[Rr]esult*/
+*.trx
+coverage/
+coverage*.json
+coverage*.xml
+coverage*.info
+*.coverage
+*.coveragexml
+TestResults/
+playwright-report/
+BenchmarkDotNet.Artifacts/
+
+# Secrets and local configuration (never commit)
+.env
+.env.*
+!.env.example
+!deploy/.env.example
+deploy/.env
+appsettings.*.local.json
+appsettings.local.json
+appsettings.Production.json
+appsettings.Staging.json
+*.local.json
+secrets.json
+usersecrets/
+UserSecrets/
+*.pfx
+*.p12
+*.pem
+*.key
+*.jwk
+*.snk
+!**/testdata/**/*.pem
+/keys/
+dataprotection-keys/
+signing-keys/
+
+# Database, backups and runtime data
+*.dump
+*.backup
+*.bak
+*.sql.gz
+/backups/
+/backup/
+/data/
+/Data/
+/src/AAALogistics.Host/Data/
+pgdata/
+/uploads/
+*.db
+*.sqlite
+*.sqlite3
+
+# Spike artifacts (code under tools/spikes is tracked; outputs are not)
+tools/spikes/**/results/
+tools/spikes/**/output/
+tools/spikes/**/*.log
+tools/spikes/**/*.csv
+tools/spikes/**/*.dump
+tools/spikes/**/datasets/
+
+# Generated docs and release artifacts
+docs/**/*.pdf
+!docs/Guia-Logi-Compass.pdf
+!docs/Guia-API-Logi-Compass.pdf
+sbom/
+*.cdx.json
+
+# Editor / agent scratch (not product docs)
+notes.md
+**/notes.md
+.cursor/
+*.canvas.tsx
+
+# Paquete Windows compilado: solo Release de GitHub
+download/*.zip
+!download/README.md

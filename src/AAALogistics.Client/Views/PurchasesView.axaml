@@ -1,0 +1,114 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             x:Class="AAALogistics.Client.Views.PurchasesView">
+    <DockPanel>
+        <StackPanel DockPanel.Dock="Top" Spacing="8" Margin="0,0,0,8">
+            <StackPanel x:Name="TitleRow" Orientation="Horizontal" Spacing="8">
+                <TextBlock Classes="page-title" Text="Pedidos de compra" VerticalAlignment="Center" />
+            </StackPanel>
+            <TextBlock Classes="muted"
+                       Text="Cree un pedido, selecciónelo en la lista y contabilice la recepción cuando llegue la mercancía."
+                       TextWrapping="Wrap" />
+            <Border Classes="action-bar">
+                <StackPanel Orientation="Horizontal" Spacing="8">
+                    <Button Classes="primary" Content="Actualizar" Click="OnRefreshClick"
+                            ToolTip.Tip="Recargar pedidos" />
+                    <Button x:Name="CancelPoButton" Classes="secondary" Content="Cancelar / Anular abierto" Click="OnCancelPoClick"
+                            ToolTip.Tip="Anula la cantidad aún abierta del pedido (pide motivo). No borra recepciones ya contabilizadas." />
+                    <ContentControl x:Name="CancelPoHelpHost" VerticalAlignment="Center" />
+                    <Button x:Name="ClosePoButton" Classes="secondary" Content="Cerrar pedido" Click="OnClosePoClick"
+                            ToolTip.Tip="Cierra el pedido e impide más recepciones." />
+                    <ContentControl x:Name="ClosePoHelpHost" VerticalAlignment="Center" />
+                    <Button x:Name="PdfPoButton" Classes="secondary" Content="PDF pedido" Click="OnPdfClick"
+                            ToolTip.Tip="Genera y guarda el PDF del pedido de compra." />
+                    <Button x:Name="PrintPoButton" Classes="secondary" Content="Imprimir" Click="OnPrintClick"
+                            ToolTip.Tip="Abre opciones de impresión (impresora Windows o abrir PDF)." />
+                </StackPanel>
+            </Border>
+            <Border Classes="panel">
+                <StackPanel Spacing="8">
+                    <TextBlock FontWeight="SemiBold" Text="Nuevo pedido de compra" />
+                    <StackPanel Orientation="Horizontal" Spacing="8">
+                        <StackPanel Spacing="2">
+                            <TextBlock Classes="muted" Text="Proveedor" />
+                            <ComboBox x:Name="SupplierBox" Width="220" />
+                        </StackPanel>
+                        <StackPanel Spacing="2">
+                            <TextBlock Classes="muted" Text="Almacén" />
+                            <ComboBox x:Name="WarehouseBox" Width="200" />
+                        </StackPanel>
+                        <StackPanel Spacing="2">
+                            <TextBlock Classes="muted" Text="Material" />
+                            <ComboBox x:Name="MaterialBox" Width="240" />
+                        </StackPanel>
+                        <StackPanel Spacing="2">
+                            <TextBlock Classes="muted" Text="Cantidad" />
+                            <TextBox x:Name="QtyBox" Width="90" />
+                        </StackPanel>
+                        <StackPanel Spacing="2">
+                            <TextBlock Classes="muted" Text="Precio" />
+                            <TextBox x:Name="PriceBox" Width="90" />
+                        </StackPanel>
+                        <Button Content="Añadir línea" VerticalAlignment="Bottom" Click="OnAddLineClick" />
+                        <Button Content="Quitar línea" VerticalAlignment="Bottom" Click="OnRemoveLineClick" />
+                        <Button x:Name="CreatePoButton" Classes="primary" Content="Crear pedido"
+                                VerticalAlignment="Bottom" Click="OnCreatePoClick" />
+                    </StackPanel>
+                    <DataGrid x:Name="DraftLinesGrid" Height="72" AutoGenerateColumns="False" />
+                </StackPanel>
+            </Border>
+            <Border Classes="panel">
+                <StackPanel Spacing="8">
+                    <StackPanel Orientation="Horizontal" Spacing="8">
+                        <TextBlock FontWeight="SemiBold" Text="Contabilizar recepción" VerticalAlignment="Center" />
+                        <ContentControl x:Name="GrHelpHost" VerticalAlignment="Center" />
+                    </StackPanel>
+                    <StackPanel Orientation="Horizontal" Spacing="8">
+                        <StackPanel Spacing="2">
+                            <TextBlock Classes="muted" Text="Cantidad" />
+                            <TextBox x:Name="GrQtyBox" Width="90" />
+                        </StackPanel>
+                        <StackPanel Spacing="2">
+                            <StackPanel Orientation="Horizontal" Spacing="4">
+                                <TextBlock Classes="muted" Text="Lote (si aplica)" VerticalAlignment="Center" />
+                                <ContentControl x:Name="LotHelpHost" VerticalAlignment="Center" />
+                            </StackPanel>
+                            <TextBox x:Name="LotCodeBox" Width="120" />
+                        </StackPanel>
+                        <StackPanel Spacing="2">
+                            <StackPanel Orientation="Horizontal" Spacing="4">
+                                <TextBlock Classes="muted" Text="Caducidad" VerticalAlignment="Center" />
+                                <ContentControl x:Name="LotExpiryHelpHost" VerticalAlignment="Center" />
+                            </StackPanel>
+                            <TextBox x:Name="LotExpiryBox" Width="120" PlaceholderText="AAAA-MM-DD" />
+                        </StackPanel>
+                        <Button x:Name="PostGrButton" Classes="primary" Content="Contabilizar recepción"
+                                VerticalAlignment="Bottom" Click="OnPostGrClick"
+                                ToolTip.Tip="Requiere permiso de recepción de mercancía" />
+                        <Button x:Name="PostAllGrButton" Classes="secondary" Content="Recibir abiertas"
+                                VerticalAlignment="Bottom" Click="OnPostAllGrClick"
+                                ToolTip.Tip="Contabiliza todas las líneas con cantidad abierta." />
+                        <TextBlock x:Name="SelectedText" Classes="muted" VerticalAlignment="Bottom" Margin="0,0,0,6" />
+                    </StackPanel>
+                    <StackPanel Orientation="Horizontal" Spacing="8">
+                        <ComboBox x:Name="GoodsReceiptBox" Width="260" PlaceholderText="Recepción por número" />
+                        <Button x:Name="PdfGrButton" Classes="secondary" Content="PDF recepción" Click="OnPdfGrClick" />
+                        <Button x:Name="PrintGrButton" Classes="secondary" Content="Imprimir recepción" Click="OnPrintGrClick" />
+                    </StackPanel>
+                </StackPanel>
+            </Border>
+            <TextBlock x:Name="StatusText" Classes="error" TextWrapping="Wrap" />
+            <TextBlock x:Name="EmptyHint" Classes="muted" IsVisible="False" TextWrapping="Wrap"
+                       Text="No hay pedidos de compra. Elija proveedor, almacén, material, cantidad y precio, y pulse Crear pedido." />
+        </StackPanel>
+        <Grid ColumnDefinitions="2*,*" RowDefinitions="*">
+            <DataGrid x:Name="OrdersGrid"
+                      AutoGenerateColumns="False"
+                      SelectionChanged="OnOrderSelected" />
+            <DataGrid x:Name="LinesGrid"
+                      Grid.Column="1"
+                      Margin="8,0,0,0"
+                      AutoGenerateColumns="False" />
+        </Grid>
+    </DockPanel>
+</UserControl>

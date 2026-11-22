@@ -1,0 +1,33 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        x:Class="AAALogistics.Client.LoginWindow"
+        Title="AAA Logistics Studio"
+        Width="460"
+        Height="420"
+        CanResize="False"
+        WindowStartupLocation="CenterScreen">
+    <StackPanel Margin="28" Spacing="12">
+        <TextBlock x:Name="TitleText"
+                   Text="AAA Logistics Studio"
+                   FontSize="26"
+                   FontWeight="Bold" />
+        <TextBlock x:Name="SubtitleText"
+                   Classes="muted"
+                   Text="Acceso interno · Logi Compass (brújula del Studio)"
+                   FontSize="14" />
+        <TextBox x:Name="UserNameBox"
+                 PlaceholderText="Usuario" />
+        <TextBox x:Name="PasswordBox"
+                 PasswordChar="•"
+                 PlaceholderText="Contraseña" />
+        <Button x:Name="LoginButton"
+                Classes="primary"
+                Content="Entrar"
+                HorizontalAlignment="Stretch"
+                HorizontalContentAlignment="Center"
+                Click="OnLoginClick" />
+        <TextBlock x:Name="StatusText"
+                   Classes="error"
+                   TextWrapping="Wrap" />
+    </StackPanel>
+</Window>

@@ -1,0 +1,112 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             x:Class="AAALogistics.Client.Views.InventoryView">
+    <DockPanel>
+        <StackPanel DockPanel.Dock="Top" Spacing="8" Margin="0,0,0,8">
+            <StackPanel x:Name="TitleRow" Orientation="Horizontal" Spacing="8">
+                <TextBlock Classes="page-title" Text="Inventario" VerticalAlignment="Center" />
+            </StackPanel>
+            <TextBlock Classes="muted"
+                       Text="Consulte stock, fije mínimo, haga apertura inicial, traspasos, ajustes o conteos eligiendo material y almacén por código."
+                       TextWrapping="Wrap" />
+            <Border Classes="action-bar">
+                <StackPanel Orientation="Horizontal" Spacing="8">
+                    <Button Classes="primary" Content="Actualizar" Click="OnRefreshClick" />
+                    <Button x:Name="ReconcileButton" Classes="secondary" Content="Reconciliar libro de stock" Click="OnReconcileClick"
+                            ToolTip.Tip="Compara el libro de movimientos con el stock actual (no corrige solo)." />
+                    <ContentControl x:Name="ReconcileHelpHost" VerticalAlignment="Center" />
+                    <ComboBox x:Name="ViewBox" Width="160" SelectionChanged="OnViewChanged">
+                        <ComboBoxItem Content="Stock actual" Tag="stock" IsSelected="True" />
+                        <ComboBoxItem Content="Movimientos" Tag="movements" />
+                        <ComboBoxItem Content="Bajo mínimo" Tag="below" />
+                    </ComboBox>
+                </StackPanel>
+            </Border>
+            <Border Classes="panel">
+                <StackPanel Spacing="8">
+                    <TextBlock FontWeight="SemiBold" Text="Selección" />
+                    <StackPanel Orientation="Horizontal" Spacing="8">
+                        <StackPanel Spacing="2">
+                            <TextBlock Classes="muted" Text="Material" />
+                            <ComboBox x:Name="MaterialBox" Width="240" />
+                        </StackPanel>
+                        <StackPanel Spacing="2">
+                            <TextBlock Classes="muted" Text="Almacén" />
+                            <ComboBox x:Name="WarehouseBox" Width="200" />
+                        </StackPanel>
+                        <StackPanel Spacing="2">
+                            <TextBlock Classes="muted" Text="Almacén destino" />
+                            <ComboBox x:Name="Warehouse2Box" Width="200" />
+                        </StackPanel>
+                        <StackPanel Spacing="2">
+                            <TextBlock Classes="muted" Text="Cantidad" />
+                            <TextBox x:Name="QtyBox" Width="90" PlaceholderText="+ suma / − resta" />
+                        </StackPanel>
+                        <StackPanel Spacing="2">
+                            <TextBlock Classes="muted" Text="Motivo" />
+                            <TextBox x:Name="ReasonBox" Width="160" Text="ajuste oficina" />
+                        </StackPanel>
+                        <Button x:Name="LotsButton" Content="Ver lotes"
+                                VerticalAlignment="Bottom" Click="OnLotsClick" />
+                    </StackPanel>
+                </StackPanel>
+            </Border>
+            <Border Classes="panel">
+                <StackPanel Spacing="8">
+                    <TextBlock FontWeight="SemiBold" Text="Apertura, traspasos y ajustes" />
+                    <StackPanel Orientation="Horizontal" Spacing="8">
+                        <Button x:Name="OpeningButton" Content="Apertura de stock" Click="OnOpeningClick"
+                                ToolTip.Tip="Carga inicial (una vez por material+almacén). Cantidad positiva." />
+                        <ContentControl x:Name="OpeningHelpHost" VerticalAlignment="Center" />
+                        <Button x:Name="TransferButton" Content="Traspasar almacén" Click="OnTransferClick" />
+                        <ContentControl x:Name="TransferHelpHost" VerticalAlignment="Center" />
+                        <Button x:Name="AdjustButton" Content="Ajuste stock" Click="OnAdjustClick"
+                                ToolTip.Tip="Cantidad firmada: positiva suma, negativa resta." />
+                        <ContentControl x:Name="AdjustHelpHost" VerticalAlignment="Center" />
+                        <Button x:Name="ReverseButton" Content="Revertir movimiento" Click="OnReverseClick" />
+                        <ContentControl x:Name="ReverseHelpHost" VerticalAlignment="Center" />
+                        <ComboBox x:Name="MovementBox" Width="280" PlaceholderText="Movimiento a revertir" />
+                        <Button x:Name="MinQtyButton" Content="Fijar mínimo" Click="OnMinQtyClick"
+                                ToolTip.Tip="Umbral para la vista Bajo mínimo." />
+                        <ContentControl x:Name="MinQtyHelpHost" VerticalAlignment="Center" />
+                        <TextBox x:Name="MinQtyBox" Width="80" PlaceholderText="Mín." />
+                    </StackPanel>
+                </StackPanel>
+            </Border>
+            <Border Classes="panel">
+                <StackPanel Spacing="8">
+                    <TextBlock FontWeight="SemiBold" Text="Conteos y estado de stock" />
+                    <StackPanel Orientation="Horizontal" Spacing="8">
+                        <Button x:Name="CountButton" Content="Crear conteo" Click="OnCreateCountClick" />
+                        <ContentControl x:Name="CreateCountHelpHost" VerticalAlignment="Center" />
+                        <ComboBox x:Name="CountBox" Width="220" PlaceholderText="Conteo a contabilizar" />
+                        <Button x:Name="PostCountButton" Classes="primary" Content="Contabilizar conteo" Click="OnPostCountClick" />
+                        <ContentControl x:Name="PostCountHelpHost" VerticalAlignment="Center" />
+                        <ComboBox x:Name="LocationBox" Width="220" PlaceholderText="Ubicación" />
+                        <Button Content="Cargar ubicaciones" Click="OnLoadLocationsClick" />
+                        <ContentControl x:Name="LoadLocationsHelpHost" VerticalAlignment="Center" />
+                        <StackPanel Orientation="Horizontal" Spacing="4" VerticalAlignment="Center">
+                            <ComboBox x:Name="LotBox" Width="200" PlaceholderText="Lote (opcional)" />
+                            <ContentControl x:Name="LotIdHelpHost" VerticalAlignment="Center" />
+                        </StackPanel>
+                        <StackPanel Orientation="Horizontal" Spacing="4" VerticalAlignment="Center">
+                            <ComboBox x:Name="StatusBox" Width="140" SelectedIndex="0">
+                                <ComboBoxItem Content="Disponible" Tag="Available" />
+                                <ComboBoxItem Content="Calidad" Tag="Quality" />
+                                <ComboBoxItem Content="Bloqueado" Tag="Blocked" />
+                                <ComboBoxItem Content="Dañado" Tag="Damaged" />
+                            </ComboBox>
+                            <ContentControl x:Name="StatusHelpHost" VerticalAlignment="Center" />
+                        </StackPanel>
+                        <Button x:Name="SetStatusButton" Content="Cambiar estado" Click="OnSetStatusClick" />
+                    </StackPanel>
+                    <TextBlock x:Name="ReconcileText" Classes="muted" TextWrapping="Wrap" />
+                </StackPanel>
+            </Border>
+            <TextBlock x:Name="StatusText" Classes="error" TextWrapping="Wrap" />
+            <TextBlock x:Name="EmptyHint" Classes="muted" IsVisible="False" TextWrapping="Wrap"
+                       Text="No hay filas en esta vista. Use Apertura de stock o recepciones de compra para cargar inventario." />
+        </StackPanel>
+        <DataGrid x:Name="Grid" AutoGenerateColumns="False" />
+    </DockPanel>
+</UserControl>

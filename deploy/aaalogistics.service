@@ -1,0 +1,25 @@
+[Unit]
+Description=AAA Logistics Server
+Documentation=https://github.com/OtherIndieProjects/logi-compass
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=simple
+User=aaalogistics
+Group=aaalogistics
+WorkingDirectory=/opt/aaalogistics
+ExecStart=/opt/aaalogistics/AAALogistics.Server
+Restart=on-failure
+RestartSec=5
+Environment=ASPNETCORE_ENVIRONMENT=Production
+# Listener interno por defecto. Añada el portal (5089) vía ASPNETCORE_URLS o config del Host.
+Environment=ASPNETCORE_URLS=http://127.0.0.1:5088
+NoNewPrivileges=true
+PrivateTmp=true
+ProtectSystem=strict
+ProtectHome=true
+ReadWritePaths=/opt/aaalogistics/Data
+
+[Install]
+WantedBy=multi-user.target

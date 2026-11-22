@@ -1,0 +1,140 @@
+@page "/acceso"
+@rendermode InteractiveServer
+@using AAALogistics.Portal.Services
+@inject PortalApiClient Api
+@inject PortalSession Session
+
+<PageTitle>Acceso</PageTitle>
+
+<h1>Acceso de cliente</h1>
+<p>Usa la audiencia de portal del servidor. El token queda en el servidor del portal y no se envía al navegador.</p>
+
+@if (!string.IsNullOrEmpty(Session.UserName))
+{
+    <p class="form-ok">Sesión iniciada como @Session.UserName.</p>
+    <button type="button" @onclick="LogoutAsync" disabled="@_busy">Cerrar sesión</button>
+}
+
+<label>
+    Usuario
+    <input @bind="_userName" @bind:event="oninput" />
+</label>
+<label>
+    Contraseña
+    <input type="password" @bind="_password" @bind:event="oninput" />
+</label>
+<button type="button" @onclick="SubmitAsync" disabled="@_busy">Entrar</button>
+@if (!string.IsNullOrEmpty(Session.RefreshToken))
+{
+    <button type="button" @onclick="RefreshSessionAsync" disabled="@_busy">Renovar sesión</button>
+}
+
+@if (!string.IsNullOrEmpty(_message))
+{
+    <p class="@(_failed ? "form-error" : "form-ok")">@_message</p>
+}
+
+@code {
+    private string _userName = string.Empty;
+    private string _password = string.Empty;
+    private string? _message;
+    private bool _failed;
+    private bool _busy;
+
+    private async Task SubmitAsync()
+    {
+        _busy = true;
+        _message = null;
+        _failed = false;
+        try
+        {
+            if (string.IsNullOrWhiteSpace(_userName) || string.IsNullOrEmpty(_password))
+            {
+                _failed = true;
+                _message = "Indique usuario y contraseña.";
+                return;
+            }
+
+            var login = await Api.LoginAsync(_userName.Trim(), _password);
+            Session.Remember(
+                _userName.Trim(),
+                login.AccessToken,
+                login.CustomerId,
+                login.RefreshToken);
+            await Api.PingAsync(login.AccessToken);
+            _message = "Acceso correcto. El servidor de portal respondió al ping.";
+        }
+        catch (Exception exception) when (exception is PortalApiException
+            or HttpRequestException
+            or TaskCanceledException)
+        {
+            _failed = true;
+            _message = exception is TaskCanceledException
+                ? "El servidor no respondió a tiempo."
+                : exception.Message;
+        }
+        finally
+        {
+            _busy = false;
+        }
+    }
+
+    private async Task LogoutAsync()
+    {
+        _busy = true;
+        try
+        {
+            if (!string.IsNullOrEmpty(Session.AccessToken)
+                && !string.IsNullOrEmpty(Session.RefreshToken))
+            {
+                await Api.LogoutAsync(Session.AccessToken, Session.RefreshToken);
+            }
+        }
+        catch
+        {
+            // Best-effort logout; clear local session anyway.
+        }
+        finally
+        {
+            Session.Clear();
+            _message = "Sesión cerrada.";
+            _failed = false;
+            _busy = false;
+        }
+    }
+
+    private async Task RefreshSessionAsync()
+    {
+        _busy = true;
+        _failed = false;
+        try
+        {
+            if (string.IsNullOrEmpty(Session.RefreshToken)
+                || string.IsNullOrEmpty(Session.UserName))
+            {
+                _failed = true;
+                _message = "No hay refresh token.";
+                return;
+            }
+
+            var login = await Api.RefreshAsync(Session.RefreshToken);
+            Session.Remember(
+                Session.UserName,
+                login.AccessToken,
+                login.CustomerId ?? Session.CustomerId,
+                login.RefreshToken);
+            _message = "Sesión renovada.";
+        }
+        catch (Exception exception) when (exception is PortalApiException
+            or HttpRequestException
+            or TaskCanceledException)
+        {
+            _failed = true;
+            _message = exception.Message;
+        }
+        finally
+        {
+            _busy = false;
+        }
+    }
+}

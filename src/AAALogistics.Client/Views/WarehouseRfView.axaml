@@ -1,0 +1,69 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             x:Class="AAALogistics.Client.Views.WarehouseRfView">
+  <ScrollViewer>
+    <StackPanel Spacing="10" Margin="0,0,0,8" MaxWidth="720" HorizontalAlignment="Left">
+      <StackPanel x:Name="TitleRow" Orientation="Horizontal" Spacing="8">
+        <TextBlock Classes="page-title" Text="Almacén RF" VerticalAlignment="Center" />
+      </StackPanel>
+      <TextBlock Classes="muted" TextWrapping="Wrap"
+                 Text="Escaneo en planta (rango Almacén). Abra antes la sesión en ALMACÉN → Preparación si va a confirmar picking. Lab = apéndice experimental." />
+      <TextBlock x:Name="EmptyHint" Classes="muted" TextWrapping="Wrap"
+                 Text="Sin sesión de picking cargada. Elija un pedido en preparación, pulse Cargar líneas, o use Escanear SSCC / Colocar en hueco." />
+      <TextBlock x:Name="StatusText" Classes="error" TextWrapping="Wrap" />
+
+      <Border Classes="panel">
+        <StackPanel Spacing="6">
+          <TextBlock FontWeight="SemiBold" Text="1 · Escanear SSCC / código" />
+          <StackPanel Orientation="Horizontal" Spacing="6">
+            <TextBox x:Name="ScanBox" Width="280" PlaceholderText="Código de barras o SSCC" />
+            <Button x:Name="ScanButton" Content="Escanear" Click="OnScanClick" />
+            <TextBlock x:Name="ScanResultText" Classes="muted" VerticalAlignment="Center" TextWrapping="Wrap" MaxWidth="320" />
+          </StackPanel>
+        </StackPanel>
+      </Border>
+
+      <Border Classes="panel">
+        <StackPanel Spacing="6">
+          <TextBlock FontWeight="SemiBold" Text="2 · Colocar en hueco (putaway)" />
+          <StackPanel Orientation="Horizontal" Spacing="6">
+            <ComboBox x:Name="WarehouseBox" Width="200" PlaceholderText="Almacén" />
+            <ComboBox x:Name="MaterialBox" Width="220" PlaceholderText="Material" />
+            <ComboBox x:Name="LotBox" Width="180" PlaceholderText="Lote" />
+          </StackPanel>
+          <StackPanel Orientation="Horizontal" Spacing="6">
+            <ComboBox x:Name="LocationBox" Width="260" PlaceholderText="Hueco destino" />
+            <TextBox x:Name="PutawayQtyBox" Width="80" Text="1" PlaceholderText="Cant." />
+            <Button x:Name="PutawayButton" Content="Colocar" Click="OnPutawayClick" />
+          </StackPanel>
+        </StackPanel>
+      </Border>
+
+      <Border Classes="panel">
+        <StackPanel Spacing="6">
+          <TextBlock FontWeight="SemiBold" Text="3 · Picking RF" />
+          <StackPanel Orientation="Horizontal" Spacing="6">
+            <ComboBox x:Name="PickOrderBox" Width="280" PlaceholderText="Pedido en preparación" />
+            <Button Content="Cargar líneas" Click="OnLoadPicksClick" />
+            <Button x:Name="ConfirmPickButton" Content="Confirmar línea" Click="OnConfirmPickClick" />
+          </StackPanel>
+          <DataGrid x:Name="PicksGrid" Height="140" AutoGenerateColumns="False" />
+        </StackPanel>
+      </Border>
+
+      <Border Classes="panel">
+        <StackPanel Spacing="6">
+          <TextBlock FontWeight="SemiBold" Text="4 · Conteo rápido" />
+          <StackPanel Orientation="Horizontal" Spacing="6">
+            <TextBox x:Name="CountQtyBox" Width="100" Text="0" PlaceholderText="Contado" />
+            <Button x:Name="CountButton" Content="Crear conteo + contabilizar" Click="OnCountClick" />
+          </StackPanel>
+          <TextBlock Classes="muted" TextWrapping="Wrap"
+                     Text="Usa almacén + material seleccionados arriba. Contabiliza el conteo al crear (permiso de ajuste)." />
+        </StackPanel>
+      </Border>
+
+      <Button Content="Actualizar maestros" Click="OnRefreshClick" HorizontalAlignment="Left" />
+    </StackPanel>
+  </ScrollViewer>
+</UserControl>

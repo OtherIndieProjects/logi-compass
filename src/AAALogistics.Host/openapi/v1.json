@@ -1,0 +1,345 @@
+{
+  "openapi": "3.0.3",
+  "info": {
+    "title": "Logi Compass · API interna",
+    "version": "v1",
+    "description": "API Minimal del Servidor Logi Compass (AAA Logistics Studio). JWT Bearer. Prefijo /api/v1/internal en puerto 5088. Guías: docs/es/api-guia.md y docs/es/crear-app-logi-compass.md."
+  },
+  "servers": [
+    { "url": "http://127.0.0.1:5088", "description": "Servidor interno (This PC)" }
+  ],
+  "components": {
+    "securitySchemes": {
+      "Bearer": {
+        "type": "http",
+        "scheme": "bearer",
+        "bearerFormat": "JWT",
+        "description": "accessToken de POST /api/v1/internal/auth/login"
+      }
+    },
+    "schemas": {
+      "LoginRequest": {
+        "type": "object",
+        "required": ["userName", "password"],
+        "properties": {
+          "userName": { "type": "string" },
+          "password": { "type": "string", "format": "password" }
+        }
+      },
+      "ProblemDetails": {
+        "type": "object",
+        "properties": {
+          "status": { "type": "integer" },
+          "title": { "type": "string" },
+          "type": { "type": "string" },
+          "code": { "type": "string" },
+          "traceId": { "type": "string" }
+        }
+      }
+    }
+  },
+  "security": [{ "Bearer": [] }],
+  "tags": [
+    { "name": "Auth" },
+    { "name": "Maestros" },
+    { "name": "Compras" },
+    { "name": "Ventas" },
+    { "name": "Inventario" },
+    { "name": "Facturas" },
+    { "name": "Informes" },
+    { "name": "Auditoria" },
+    { "name": "Oficina" }
+  ],
+  "paths": {
+    "/api/v1/internal/auth/login": {
+      "post": {
+        "tags": ["Auth"],
+        "summary": "Login JWT",
+        "security": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": { "$ref": "#/components/schemas/LoginRequest" }
+            }
+          }
+        },
+        "responses": {
+          "200": { "description": "Tokens + permisos" },
+          "401": { "description": "Credenciales inválidas" }
+        }
+      }
+    },
+    "/api/v1/internal/auth/refresh": {
+      "post": {
+        "tags": ["Auth"],
+        "summary": "Renovar access token",
+        "responses": { "200": { "description": "Nuevo access token" } }
+      }
+    },
+    "/api/v1/internal/auth/logout": {
+      "post": {
+        "tags": ["Auth"],
+        "summary": "Cerrar sesión / invalidar refresh",
+        "responses": { "204": { "description": "OK" } }
+      }
+    },
+    "/api/v1/internal/me": {
+      "get": {
+        "tags": ["Auth"],
+        "summary": "Usuario actual y permisos",
+        "responses": { "200": { "description": "Perfil" } }
+      }
+    },
+    "/api/v1/internal/materials": {
+      "get": {
+        "tags": ["Maestros"],
+        "summary": "Listar materiales",
+        "responses": { "200": { "description": "Lista" } }
+      },
+      "post": {
+        "tags": ["Maestros"],
+        "summary": "Crear material",
+        "responses": { "201": { "description": "Creado" } }
+      }
+    },
+    "/api/v1/internal/warehouses": {
+      "get": {
+        "tags": ["Maestros"],
+        "summary": "Listar almacenes",
+        "responses": { "200": { "description": "Lista" } }
+      }
+    },
+    "/api/v1/internal/customers": {
+      "get": {
+        "tags": ["Maestros"],
+        "summary": "Listar clientes",
+        "responses": { "200": { "description": "Lista" } }
+      }
+    },
+    "/api/v1/internal/suppliers": {
+      "get": {
+        "tags": ["Maestros"],
+        "summary": "Listar proveedores",
+        "responses": { "200": { "description": "Lista" } }
+      }
+    },
+    "/api/v1/internal/document-number-ranges": {
+      "get": {
+        "tags": ["Maestros"],
+        "summary": "Rangos de numeración documental",
+        "responses": { "200": { "description": "Lista" } }
+      },
+      "put": {
+        "tags": ["Maestros"],
+        "summary": "Crear/actualizar rango (prefijo + próximo)",
+        "responses": { "200": { "description": "Rango" } }
+      }
+    },
+    "/api/v1/internal/purchase-orders": {
+      "get": {
+        "tags": ["Compras"],
+        "summary": "Listar pedidos de compra",
+        "responses": { "200": { "description": "Lista" } }
+      },
+      "post": {
+        "tags": ["Compras"],
+        "summary": "Crear pedido de compra (multi-línea)",
+        "responses": { "201": { "description": "Pedido" } }
+      }
+    },
+    "/api/v1/internal/goods-receipts/post": {
+      "post": {
+        "tags": ["Compras"],
+        "summary": "Contabilizar recepción (GR)",
+        "responses": { "200": { "description": "Posting" } }
+      }
+    },
+    "/api/v1/internal/goods-receipts": {
+      "get": {
+        "tags": ["Compras"],
+        "summary": "Listar recepciones",
+        "parameters": [
+          {
+            "name": "purchaseOrderId",
+            "in": "query",
+            "schema": { "type": "string", "format": "uuid" }
+          }
+        ],
+        "responses": { "200": { "description": "Lista" } }
+      }
+    },
+    "/api/v1/internal/goods-receipts/{id}/pdf": {
+      "get": {
+        "tags": ["Compras"],
+        "summary": "PDF recepción",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": { "type": "string", "format": "uuid" }
+          }
+        ],
+        "responses": { "200": { "description": "application/pdf" } }
+      }
+    },
+    "/api/v1/internal/quotes": {
+      "get": {
+        "tags": ["Ventas"],
+        "summary": "Listar presupuestos",
+        "responses": { "200": { "description": "Lista" } }
+      },
+      "post": {
+        "tags": ["Ventas"],
+        "summary": "Crear presupuesto (multi-línea)",
+        "responses": { "201": { "description": "Presupuesto" } }
+      }
+    },
+    "/api/v1/internal/sales-orders": {
+      "get": {
+        "tags": ["Ventas"],
+        "summary": "Listar pedidos de venta",
+        "responses": { "200": { "description": "Lista" } }
+      },
+      "post": {
+        "tags": ["Ventas"],
+        "summary": "Crear pedido de venta (multi-línea)",
+        "responses": { "201": { "description": "Pedido" } }
+      }
+    },
+    "/api/v1/internal/deliveries": {
+      "get": {
+        "tags": ["Ventas"],
+        "summary": "Listar entregas / albaranes",
+        "parameters": [
+          {
+            "name": "salesOrderId",
+            "in": "query",
+            "schema": { "type": "string", "format": "uuid" }
+          }
+        ],
+        "responses": { "200": { "description": "Lista" } }
+      }
+    },
+    "/api/v1/internal/deliveries/post": {
+      "post": {
+        "tags": ["Ventas"],
+        "summary": "Contabilizar entrega (PGI)",
+        "responses": { "200": { "description": "Posting" } }
+      }
+    },
+    "/api/v1/internal/stock": {
+      "get": {
+        "tags": ["Inventario"],
+        "summary": "Stock actual",
+        "responses": { "200": { "description": "Saldos" } }
+      }
+    },
+    "/api/v1/internal/rf/scan": {
+      "post": {
+        "tags": ["Inventario"],
+        "summary": "Escaneo RF",
+        "responses": { "200": { "description": "Resultado" } }
+      }
+    },
+    "/api/v1/internal/issuer-fiscal": {
+      "get": {
+        "tags": ["Facturas"],
+        "summary": "Datos de mi empresa",
+        "responses": { "200": { "description": "Perfil emisor" } }
+      },
+      "put": {
+        "tags": ["Facturas"],
+        "summary": "Guardar perfil emisor (CIF + razón)",
+        "responses": { "200": { "description": "Perfil" } }
+      }
+    },
+    "/api/v1/internal/branding": {
+      "get": {
+        "tags": ["Oficina"],
+        "summary": "Marca del producto (nombre/logo/acento)",
+        "responses": { "200": { "description": "AppBranding" } }
+      },
+      "put": {
+        "tags": ["Oficina"],
+        "summary": "Guardar marca (Invoice.Config)",
+        "responses": { "200": { "description": "AppBranding" } }
+      }
+    },
+    "/api/v1/internal/branding/logo": {
+      "get": {
+        "tags": ["Oficina"],
+        "summary": "Descargar logo de marca",
+        "responses": { "200": { "description": "image/png|jpeg" }, "404": { "description": "Sin logo" } }
+      }
+    },
+    "/api/v1/internal/invoices": {
+      "get": {
+        "tags": ["Facturas"],
+        "summary": "Listar facturas",
+        "responses": { "200": { "description": "Lista" } }
+      },
+      "post": {
+        "tags": ["Facturas"],
+        "summary": "Emitir factura (multi-línea)",
+        "responses": { "201": { "description": "Factura" } }
+      }
+    },
+    "/api/v1/internal/reports/stock/pdf": {
+      "get": {
+        "tags": ["Informes"],
+        "summary": "PDF stock",
+        "responses": { "200": { "description": "application/pdf" } }
+      }
+    },
+    "/api/v1/internal/reports/otif": {
+      "get": {
+        "tags": ["Informes"],
+        "summary": "OTIF",
+        "responses": { "200": { "description": "Métrica" } }
+      }
+    },
+    "/api/v1/internal/studio/reports/aging": {
+      "get": {
+        "tags": ["Informes"],
+        "summary": "Antigüedad cobros",
+        "responses": { "200": { "description": "Aging" } }
+      }
+    },
+    "/api/v1/internal/studio/reports/valued-stock": {
+      "get": {
+        "tags": ["Informes"],
+        "summary": "Stock valorado",
+        "responses": { "200": { "description": "Valorado" } }
+      }
+    },
+    "/api/v1/internal/audit/entries": {
+      "get": {
+        "tags": ["Auditoria"],
+        "summary": "Entradas de auditoría",
+        "responses": { "200": { "description": "Trail" } }
+      }
+    },
+    "/api/v1/internal/cmr": {
+      "get": {
+        "tags": ["Oficina"],
+        "summary": "Listar CMR",
+        "responses": { "200": { "description": "Lista" } }
+      },
+      "post": {
+        "tags": ["Oficina"],
+        "summary": "Crear CMR",
+        "responses": { "201": { "description": "CMR" } }
+      }
+    },
+    "/health/live": {
+      "get": {
+        "tags": ["Auth"],
+        "summary": "Liveness",
+        "security": [],
+        "responses": { "200": { "description": "Alive" } }
+      }
+    }
+  }
+}

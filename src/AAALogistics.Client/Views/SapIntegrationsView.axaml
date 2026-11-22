@@ -1,0 +1,36 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             x:Class="AAALogistics.Client.Views.SapIntegrationsView">
+    <DockPanel>
+        <StackPanel DockPanel.Dock="Top" Spacing="10" Margin="0,0,0,10">
+            <StackPanel x:Name="TitleRow" Orientation="Horizontal" Spacing="8">
+                <TextBlock Classes="page-title" Text="Integraciones · SAP OData" VerticalAlignment="Center" />
+            </StackPanel>
+            <Border Classes="message-strip">
+                <TextBlock x:Name="StatusBanner"
+                           TextWrapping="Wrap"
+                           Text="Cargando estado SAP…" />
+            </Border>
+            <Border Classes="panel">
+                <StackPanel Spacing="8">
+                    <TextBlock FontWeight="SemiBold" Text="Operaciones" />
+                    <StackPanel Orientation="Horizontal" Spacing="8">
+                        <Button Classes="primary" Content="Actualizar estado" Click="OnRefreshClick" />
+                        <Button x:Name="ListButton" Content="Listar materiales SAP" Click="OnListMaterialsClick" />
+                        <Button x:Name="SyncButton" Content="Sincronizar catálogo" Click="OnSyncClick" />
+                        <Button x:Name="OutboxButton" Content="Ver cola de salida" Click="OnOutboxClick" />
+                        <Button x:Name="ProcessButton" Content="Procesar cola de salida" Click="OnProcessClick" />
+                    </StackPanel>
+                    <StackPanel Orientation="Horizontal" Spacing="8">
+                        <ComboBox x:Name="DeliveryBox" Width="320" PlaceholderText="Albarán / entrega por número" />
+                        <Button x:Name="PushButton" Classes="primary" Content="Encolar push de entrega" Click="OnPushClick"
+                                ToolTip.Tip="Encola el albarán/entrega hacia SAP (outbox)." />
+                        <ContentControl x:Name="EnqueueHelpHost" VerticalAlignment="Center" />
+                    </StackPanel>
+                    <TextBlock x:Name="StatusText" Classes="error" TextWrapping="Wrap" />
+                </StackPanel>
+            </Border>
+        </StackPanel>
+        <DataGrid x:Name="Grid" AutoGenerateColumns="True" />
+    </DockPanel>
+</UserControl>

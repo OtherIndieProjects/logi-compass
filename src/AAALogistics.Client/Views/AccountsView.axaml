@@ -1,0 +1,77 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             x:Class="AAALogistics.Client.Views.AccountsView">
+    <DockPanel>
+        <StackPanel DockPanel.Dock="Top" Spacing="8" Margin="0,0,0,8">
+            <StackPanel x:Name="TitleRow" Orientation="Horizontal" Spacing="8">
+                <TextBlock Classes="page-title" Text="Cuentas" VerticalAlignment="Center" />
+            </StackPanel>
+            <Border Classes="action-bar">
+                <StackPanel Orientation="Horizontal" Spacing="8">
+                    <Button Classes="primary" Content="Actualizar" Click="OnRefreshClick"
+                            AutomationProperties.Name="Actualizar usuarios" />
+                    <TextBox x:Name="NewUserBox" Width="160" PlaceholderText="Nuevo trabajador" />
+                    <Button x:Name="CreateUserButton" Classes="secondary" Content="Crear trabajador" Click="OnCreateClick"
+                            AutomationProperties.Name="Crear trabajador" />
+                    <Button x:Name="SuspendButton" Classes="secondary" Content="Suspender" Click="OnSuspendClick"
+                            ToolTip.Tip="Bloquea el acceso temporalmente (requiere motivo)." />
+                    <ContentControl x:Name="SuspendHelpHost" VerticalAlignment="Center" />
+                    <Button x:Name="ReactivateButton" Classes="secondary" Content="Reactivar" Click="OnReactivateClick"
+                            ToolTip.Tip="Quita la suspensión y restaura el acceso." />
+                    <Button x:Name="TerminateButton" Classes="secondary" Content="Dar de baja" Click="OnTerminateClick"
+                            ToolTip.Tip="Baja definitiva del trabajador (requiere motivo)." />
+                    <TextBox x:Name="ReasonBox" Width="180" PlaceholderText="Motivo (obligatorio)" />
+                </StackPanel>
+            </Border>
+            <Border Classes="panel">
+                <StackPanel Spacing="6">
+                    <StackPanel Orientation="Horizontal" Spacing="8">
+                        <TextBlock FontWeight="SemiBold" Text="Rangos del usuario seleccionado" VerticalAlignment="Center" />
+                        <ContentControl x:Name="RangesHelpHost" VerticalAlignment="Center" />
+                    </StackPanel>
+                    <WrapPanel x:Name="RangePanel" />
+                    <Button Classes="primary" Content="Guardar rangos" Click="OnSaveRangesClick"
+                            HorizontalAlignment="Left"
+                            AutomationProperties.Name="Guardar rangos" />
+                    <TextBlock x:Name="RangeHint" Classes="muted" TextWrapping="Wrap"
+                               Text="Obligatorio ≥1 rango al crear. Prefiera rangos a permisos sueltos. Cliente es exclusivo." />
+                </StackPanel>
+            </Border>
+            <Border x:Name="ManualPermissionsPanel" Classes="panel">
+                <StackPanel Spacing="6">
+                    <TextBlock FontWeight="SemiBold" Text="Permisos excepcionales (solo Admin)" />
+                    <ScrollViewer Height="120">
+                        <WrapPanel x:Name="PermissionPanel" />
+                    </ScrollViewer>
+                    <Button x:Name="SavePermissionsButton" Classes="secondary" Content="Guardar permisos" Click="OnSavePermissionsClick"
+                            HorizontalAlignment="Left"
+                            AutomationProperties.Name="Guardar permisos" />
+                    <TextBlock x:Name="PermHint" Classes="muted" TextWrapping="Wrap" />
+                </StackPanel>
+            </Border>
+            <Border x:Name="DocRangesPanel" Classes="panel">
+                <StackPanel Spacing="6">
+                    <TextBlock FontWeight="SemiBold" Text="Numeración de documentos" />
+                    <TextBlock Classes="muted" TextWrapping="Wrap"
+                               Text="Prefijo y próximo número (PO, SO, GR, CMR…). No baje el contador por debajo del ya usado." />
+                    <StackPanel Orientation="Horizontal" Spacing="8">
+                        <ComboBox x:Name="DocTypeBox" Width="160" PlaceholderText="Tipo" />
+                        <TextBox x:Name="DocPrefixBox" Width="100" PlaceholderText="Prefijo" />
+                        <TextBox x:Name="DocNextBox" Width="100" PlaceholderText="Próximo nº" />
+                        <Button x:Name="SaveDocRangeButton" Classes="primary" Content="Guardar numeración"
+                                Click="OnSaveDocRangeClick" />
+                        <Button Content="Actualizar numeración" Click="OnRefreshDocRangesClick" />
+                    </StackPanel>
+                    <DataGrid x:Name="DocRangesGrid" Height="100" AutoGenerateColumns="False"
+                              SelectionChanged="OnDocRangeSelected" />
+                </StackPanel>
+            </Border>
+            <TextBlock x:Name="StatusText" Classes="error" TextWrapping="Wrap" />
+            <TextBlock x:Name="EmptyHint" Classes="muted" IsVisible="False" TextWrapping="Wrap"
+                       Text="No hay trabajadores. Indique un nombre y pulse Crear trabajador." />
+        </StackPanel>
+        <DataGrid x:Name="UsersGrid"
+                  AutoGenerateColumns="False"
+                  SelectionChanged="OnUserSelected" />
+    </DockPanel>
+</UserControl>

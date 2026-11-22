@@ -1,0 +1,72 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             x:Class="AAALogistics.Client.Views.QuotesView">
+    <DockPanel>
+        <StackPanel DockPanel.Dock="Top" Spacing="8" Margin="0,0,0,8">
+            <StackPanel x:Name="TitleRow" Orientation="Horizontal" Spacing="8">
+                <TextBlock Classes="page-title" Text="Presupuestos" VerticalAlignment="Center" />
+            </StackPanel>
+            <TextBlock Classes="muted" TextWrapping="Wrap"
+                       Text="Ofertas comerciales al cliente. Aceptar crea un pedido de venta vinculado. PDF e Imprimir usan la plantilla estética compartida (no es factura)." />
+            <Border Classes="action-bar">
+                <StackPanel Orientation="Horizontal" Spacing="8">
+                    <Button Classes="primary" Content="Actualizar" Click="OnRefreshClick" />
+                    <Button x:Name="SendButton" Classes="secondary" Content="Marcar enviado" Click="OnSendClick" />
+                    <Button x:Name="AcceptButton" Classes="secondary" Content="Aceptar → pedido" Click="OnAcceptClick"
+                            ToolTip.Tip="Acepta el presupuesto y crea el pedido de venta." />
+                    <Button x:Name="RejectButton" Classes="secondary" Content="Rechazar" Click="OnRejectClick" />
+                    <Button x:Name="PdfButton" Classes="secondary" Content="PDF presupuesto" Click="OnPdfClick" />
+                    <Button x:Name="PrintButton" Classes="secondary" Content="Imprimir" Click="OnPrintClick" />
+                </StackPanel>
+            </Border>
+            <Border Classes="panel">
+                <StackPanel Spacing="8">
+                    <TextBlock FontWeight="SemiBold" Text="Nuevo presupuesto" />
+                    <StackPanel Orientation="Horizontal" Spacing="8">
+                        <StackPanel Spacing="2">
+                            <TextBlock Classes="muted" Text="Cliente" />
+                            <ComboBox x:Name="CustomerBox" Width="200" />
+                        </StackPanel>
+                        <StackPanel Spacing="2">
+                            <TextBlock Classes="muted" Text="Almacén" />
+                            <ComboBox x:Name="WarehouseBox" Width="180" />
+                        </StackPanel>
+                        <StackPanel Spacing="2">
+                            <TextBlock Classes="muted" Text="Material" />
+                            <ComboBox x:Name="MaterialBox" Width="220" />
+                        </StackPanel>
+                        <StackPanel Spacing="2">
+                            <TextBlock Classes="muted" Text="Cant." />
+                            <TextBox x:Name="QtyBox" Width="70" Text="1" />
+                        </StackPanel>
+                        <StackPanel Spacing="2">
+                            <TextBlock Classes="muted" Text="Precio" />
+                            <TextBox x:Name="PriceBox" Width="80" Text="100" />
+                        </StackPanel>
+                        <StackPanel Spacing="2">
+                            <TextBlock Classes="muted" Text="IVA %" />
+                            <TextBox x:Name="TaxBox" Width="60" Text="21" />
+                        </StackPanel>
+                        <StackPanel Spacing="2">
+                            <TextBlock Classes="muted" Text="Válido días" />
+                            <TextBox x:Name="ValidDaysBox" Width="70" Text="30" />
+                        </StackPanel>
+                        <Button Content="Añadir línea" VerticalAlignment="Bottom" Click="OnAddLineClick"
+                                ToolTip.Tip="Añade material/cant./precio al borrador multi-línea." />
+                        <Button Content="Quitar línea" VerticalAlignment="Bottom" Click="OnRemoveLineClick" />
+                        <Button x:Name="CreateButton" Classes="primary" Content="Crear"
+                                VerticalAlignment="Bottom" Click="OnCreateClick" />
+                    </StackPanel>
+                    <DataGrid x:Name="DraftLinesGrid" Height="88" AutoGenerateColumns="False" />
+                </StackPanel>
+            </Border>
+            <TextBlock x:Name="StatusText" Classes="error" TextWrapping="Wrap" />
+            <TextBlock x:Name="EmptyHint" Classes="muted" IsVisible="False" TextWrapping="Wrap"
+                       Text="No hay presupuestos. Elija cliente, almacén, material, cantidad y precio, y pulse Crear." />
+        </StackPanel>
+        <Grid ColumnDefinitions="2*,*" RowDefinitions="*">
+            <DataGrid x:Name="QuotesGrid" AutoGenerateColumns="False" SelectionChanged="OnQuoteSelected" />
+            <DataGrid x:Name="LinesGrid" Grid.Column="1" Margin="8,0,0,0" AutoGenerateColumns="False" />
+        </Grid>
+    </DockPanel>
+</UserControl>

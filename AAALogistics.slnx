@@ -1,0 +1,22 @@
+<Solution>
+  <Folder Name="/src/">
+    <Project Path="src/AAALogistics.Api/AAALogistics.Api.csproj" />
+    <Project Path="src/AAALogistics.Application/AAALogistics.Application.csproj" />
+    <Project Path="src/AAALogistics.Client/AAALogistics.Client.csproj" />
+    <Project Path="src/AAALogistics.Contracts/AAALogistics.Contracts.csproj" />
+    <Project Path="src/AAALogistics.Domain/AAALogistics.Domain.csproj" />
+    <Project Path="src/AAALogistics.Host/AAALogistics.Host.csproj" />
+    <Project Path="src/AAALogistics.Infrastructure/AAALogistics.Infrastructure.csproj" />
+    <Project Path="src/AAALogistics.Integrations/AAALogistics.Integrations.csproj" />
+    <Project Path="src/AAALogistics.Portal/AAALogistics.Portal.csproj" />
+  </Folder>
+  <Folder Name="/tests/">
+    <Project Path="tests/AAALogistics.Application.Tests/AAALogistics.Application.Tests.csproj" />
+    <Project Path="tests/AAALogistics.Architecture.Tests/AAALogistics.Architecture.Tests.csproj" />
+    <Project Path="tests/AAALogistics.Client.Tests/AAALogistics.Client.Tests.csproj" />
+    <Project Path="tests/AAALogistics.Domain.Tests/AAALogistics.Domain.Tests.csproj" />
+    <Project Path="tests/AAALogistics.E2E.Tests/AAALogistics.E2E.Tests.csproj" />
+    <Project Path="tests/AAALogistics.Integration.Tests/AAALogistics.Integration.Tests.csproj" />
+    <Project Path="tests/AAALogistics.Security.Tests/AAALogistics.Security.Tests.csproj" />
+  </Folder>
+</Solution>

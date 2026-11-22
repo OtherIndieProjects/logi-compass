@@ -1,0 +1,35 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             x:Class="AAALogistics.Client.Views.ReportsView">
+    <DockPanel>
+        <StackPanel DockPanel.Dock="Top" Spacing="8" Margin="0,0,0,8">
+            <StackPanel x:Name="TitleRow" Orientation="Horizontal" Spacing="8">
+                <TextBlock Classes="page-title" Text="Informes" VerticalAlignment="Center" />
+            </StackPanel>
+            <StackPanel Orientation="Horizontal" Spacing="8">
+                <Button Classes="primary" Content="Pedidos por estado" Click="OnRefreshClick" />
+                <Button Content="Entrega a tiempo (OTIF)" Click="OnOtifClick"
+                        ToolTip.Tip="Porcentaje de pedidos entregados a tiempo." />
+                <Button x:Name="PdfOrdersButton" Content="PDF pedidos" Click="OnPdfOrdersClick"
+                        ToolTip.Tip="Genera PDF del listado pedidos por estado." />
+                <Button x:Name="PrintOrdersButton" Content="Imprimir pedidos" Click="OnPrintOrdersClick" />
+                <Button x:Name="PdfOtifButton" Content="PDF OTIF" Click="OnPdfOtifClick"
+                        ToolTip.Tip="Genera PDF del informe OTIF." />
+                <Button x:Name="PrintOtifButton" Content="Imprimir OTIF" Click="OnPrintOtifClick" />
+                <Button x:Name="PdfStockButton" Content="PDF stock" Click="OnPdfStockClick"
+                        ToolTip.Tip="Informe PDF de stock (grid)." />
+                <Button x:Name="PrintStockButton" Content="Imprimir stock" Click="OnPrintStockClick" />
+                <Button x:Name="ExportStockButton" Content="Exportar stock.xlsx" Click="OnExportStockClick" />
+                <Button x:Name="AgingButton" Content="Antigüedad cobros" Click="OnAgingClick"
+                        ToolTip.Tip="Aging de cobros abiertos (Studio BI cableado a oficina)." />
+                <Button x:Name="ValuedStockButton" Content="Stock valorado" Click="OnValuedStockClick"
+                        ToolTip.Tip="Stock con valoración (Studio BI cableado a oficina)." />
+            </StackPanel>
+            <TextBlock x:Name="OtifText" Classes="muted" TextWrapping="Wrap" />
+            <TextBlock x:Name="EmptyHint" Classes="muted" IsVisible="False" TextWrapping="Wrap"
+                       Text="Sin filas de informe. Pulse Pedidos por estado." />
+        </StackPanel>
+        <TextBlock x:Name="StatusText" DockPanel.Dock="Bottom" Classes="error" Margin="0,8,0,0" TextWrapping="Wrap" />
+        <DataGrid x:Name="Grid" AutoGenerateColumns="False" />
+    </DockPanel>
+</UserControl>
